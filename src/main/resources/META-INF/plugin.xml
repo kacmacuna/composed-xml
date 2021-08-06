@@ -1,0 +1,28 @@
+<idea-plugin>
+    <id>org.composed.xml.composed-xml</id>
+    <name>Composed Xml</name>
+    <vendor email="bkurtanidze11@gmail.com">Kacmacuna</vendor>
+
+    <description><![CDATA[
+    Plugin that helps you translate xml layout files to composable files<br>
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="Composed-Xml"
+                description="Translate xml layout files to composable file" text="To Composable"
+                class="plugin.XmlLayoutToComposable"
+                icon="AllIcons.FileTypes.Custom">
+            <add-to-group
+                    group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
+</idea-plugin>
