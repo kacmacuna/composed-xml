@@ -5,7 +5,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import generators.nodes.elements.colors.ColorElement
 
-//Text("${info.text}", color = colorResource(${info.textColorRes}), fontSize = ${info.fontSize}.sp)
 class TextViewNode(
     private val info: Info
 ) : ViewNode {
@@ -34,7 +33,7 @@ class TextViewNode(
     override fun imports(): Iterable<ClassName> {
         return listOf(
             ClassName("androidx.compose.material", "Text"),
-            ClassName("androidx.compose.ui.res", "colorResource")
+            ClassName("androidx.compose.ui.unit", "sp")
         ) + info.textColor.imports()
     }
 

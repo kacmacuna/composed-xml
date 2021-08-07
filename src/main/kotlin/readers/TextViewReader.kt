@@ -6,24 +6,19 @@ import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.util.*
 
-class TextViewReader(private val document: Document) {
+class TextViewReader(private val document: LayoutDocument) {
 
     private val colorElementParser = ColorElementParser()
 
     fun node(): TextViewNode {
         return TextViewNode(
             TextViewNode.Info(
-                id = getViewIdNameTag(document.documentElement),
+                id = document.getViewIdNameTag(document.documentElement),
                 text = getText(document.documentElement),
                 textColor = colorElementParser.parse(document.documentElement.getAttribute("android:textColor")),
                 fontSize = getFontSize(document.documentElement)
             )
         )
-    }
-
-    private fun getViewIdNameTag(documentElement: Element): String {
-        return documentElement.getAttribute("android:id").removePrefix("@+id/")
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 
     private fun getFontSize(documentElement: Element): Int {

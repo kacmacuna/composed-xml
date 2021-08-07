@@ -16,12 +16,16 @@ class XmlReaderImpl : XmlReader {
         val dbf = DocumentBuilderFactory.newInstance()
         val db = dbf.newDocumentBuilder()
         val document = db.parse(InputSource(StringReader(content)))
-        return if (document.documentElement.nodeName == "TextView")
-            ComposeGeneratorImpl(
-                TextViewReader(document).node(),
+        return when (document.documentElement.nodeName) {
+            "TextView" -> ComposeGeneratorImpl(
+                TextViewReader(LayoutDocument(document)).node(),
                 fileName
             )
-        else
-            TODO()
+            "LinearLayout" -> ComposeGeneratorImpl(
+                LinearLayoutReader(LayoutDocument(document)).node(),
+                fileName
+            )
+            else -> TODO()
+        }
     }
 }

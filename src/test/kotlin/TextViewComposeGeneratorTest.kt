@@ -12,7 +12,7 @@ class TextViewComposeGeneratorTest {
     private val xmlReader: XmlReader = XmlReaderImpl()
 
     @Test
-    fun `generated file's name should be test`() {
+    fun `given layout name is test generated file's name should be test`() {
         val composeGenerator = xmlReader.read(
             content = """ <TextView /> """.trimIndent(),
             fileName = "test"
@@ -24,7 +24,7 @@ class TextViewComposeGeneratorTest {
     }
 
     @Test
-    fun `generated function's name should be Title`() {
+    fun `given TextView's id is title generated function's name should be Title`() {
         val composeGenerator = xmlReader.read(
             content = """ <TextView android:id="@+id/title"/> """.trimIndent(),
             fileName = "test"
@@ -37,7 +37,7 @@ class TextViewComposeGeneratorTest {
     }
 
     @Test
-    fun `generated function should be @Composable`() {
+    fun `given generating Composable function it should have @Composable annotation`() {
         val composeGenerator = xmlReader.read(
             content = """ <TextView android:id="@+id/title"/> """.trimIndent(),
             fileName = "test"
@@ -75,7 +75,7 @@ class TextViewComposeGeneratorTest {
     }
 
     @Test
-    fun `generated function should import Text and colorResource`() {
+    fun `given text color defines textColor and textSize generated function should import Text and colorResource`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <TextView
@@ -93,14 +93,15 @@ class TextViewComposeGeneratorTest {
         assertThat(
             importsAsStrings, CoreMatchers.hasItems(
                 "androidx.compose.material.Text",
-                "androidx.compose.ui.res.colorResource"
+                "androidx.compose.ui.res.colorResource",
+                "androidx.compose.ui.unit.sp"
             )
         )
 
     }
 
     @Test
-    fun `generated function should have hardcoded color value`() {
+    fun `given TextView defines textColor HardCoded way generated function should have HardCoded color value`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <TextView
@@ -122,7 +123,7 @@ class TextViewComposeGeneratorTest {
     }
 
     @Test
-    fun `generated function should not define text color and text size`() {
+    fun `given TextView only defines text Composable function should only define Text`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <TextView
