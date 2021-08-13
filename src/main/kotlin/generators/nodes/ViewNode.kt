@@ -6,7 +6,9 @@ import com.squareup.kotlinpoet.FunSpec
 
 interface ViewNode {
     val children: Iterable<ViewNode>
-    fun generate(): FunSpec
+    val parent: ViewNode?
+
+    fun function(): FunSpec
     fun body(): CodeBlock
     fun imports(): Iterable<ClassName>
 }

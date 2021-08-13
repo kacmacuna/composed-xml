@@ -7,11 +7,12 @@ import com.squareup.kotlinpoet.FunSpec
 import generators.nodes.elements.colors.ColorElement
 
 class TextViewNode(
-    private val info: Info
+    private val info: Info,
+    override val parent: ViewNode?
 ) : ViewNode {
     override val children: Iterable<ViewNode> = emptyList()
 
-    override fun generate(): FunSpec {
+    override fun function(): FunSpec {
         return FunSpec.builder(info.id)
             .addAnnotation(composeAnnotation())
             .addCode(body())

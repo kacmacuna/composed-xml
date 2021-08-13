@@ -11,7 +11,7 @@ class NestedLinearLayoutTest {
     private val xmlReader: XmlReader = XmlReaderImpl()
 
     @Test
-    fun `given TextView is nested inside of Vertical LinearLayout, generated function should be Column {Text(Hello)}`() {
+    fun `given Text is nested inside of vLinearLayout, generated function should be Column {Text(Hello)}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -36,7 +36,7 @@ class NestedLinearLayoutTest {
     }
 
     @Test
-    fun `given TextView is nested inside of Horizontal LinearLayout, generated function should be Row {Text(Hello)}`() {
+    fun `given Text is nested inside of hLinearLayout, generated function should be Row {Text(Hello)}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -61,7 +61,7 @@ class NestedLinearLayoutTest {
     }
 
     @Test
-    fun `given two TextView is nested inside of LinearLayout, function should be Row {Text(Hello1),nText(Hello2)}`(){
+    fun `given two Text is nested inside of LinearLayout, function should be Row {Text(Hello1),nText(Hello2)}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -86,6 +86,41 @@ class NestedLinearLayoutTest {
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
         MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+    }
+
+    @Test
+    fun `given Text is nested in hLinearLayout and it is nested in vLinearLayout, function should be Column{Row{Text(Hello)}}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/vertical"
+                android:orientation="vertical">
+                
+                <LinearLayout
+                android:id="@+id/horizontal"
+                android:orientation="horizontal">
+                
+                    <TextView
+                        android:id="@+id/title"
+                        android:text="Hello"/>
+                        
+                </LinearLayout>
+                
+            </LinearLayout>""".trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Column {\n\tRow {\n\t\tText(\"Hello\")\n\t}\n}"
+
+        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+
+        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
     }
 
 }

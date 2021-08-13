@@ -18,11 +18,11 @@ class XmlReaderImpl : XmlReader {
         val document = db.parse(InputSource(StringReader(content)))
         return when (document.documentElement.nodeName) {
             "TextView" -> ComposeGeneratorImpl(
-                TextViewReader(LayoutElement(document.documentElement)).node(),
+                TextViewReader(LayoutElement(document.documentElement), null).node(),
                 fileName
             )
             "LinearLayout" -> ComposeGeneratorImpl(
-                LinearLayoutReader(LayoutElement(document.documentElement)).node(),
+                LinearLayoutReader(LayoutElement(document.documentElement), null).node(),
                 fileName
             )
             else -> TODO()

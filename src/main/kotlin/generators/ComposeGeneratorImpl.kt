@@ -1,8 +1,6 @@
 package generators
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.Import
 import generators.nodes.ViewNode
 
 class ComposeGeneratorImpl(
@@ -12,7 +10,7 @@ class ComposeGeneratorImpl(
     override fun generate(): FileSpec {
         return FileSpec
             .builder(fileName, fileName)
-            .addFunction(viewNode.generate())
+            .addFunction(viewNode.function())
             .also { builder -> viewNode.imports().forEach { builder.addImport(it, "") } }
             .build()
     }

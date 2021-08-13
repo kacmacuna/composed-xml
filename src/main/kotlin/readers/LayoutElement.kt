@@ -4,7 +4,7 @@ import org.w3c.dom.Element
 import java.util.*
 
 class LayoutElement(
-    private val element: Element
+    val element: Element
 ) : Element by element {
 
     fun getViewIdNameTag(): String {

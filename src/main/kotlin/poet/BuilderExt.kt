@@ -3,22 +3,22 @@ package poet
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 
-fun FunSpec.Builder.addCodeBlockIf(
+fun CodeBlock.Builder.addCodeBlockIf(
     condition: Boolean,
     codeBlock: () -> CodeBlock
-): FunSpec.Builder {
+): CodeBlock.Builder {
     return if (condition)
-        addCode(codeBlock())
+        add(codeBlock())
     else
         this
 }
 
-fun FunSpec.Builder.addCodeIf(
+fun CodeBlock.Builder.addCodeIf(
     condition: Boolean,
     codeBlock: () -> String
-): FunSpec.Builder {
+): CodeBlock.Builder {
     return if (condition)
-        addCode(codeBlock())
+        add(codeBlock())
     else
         this
 }

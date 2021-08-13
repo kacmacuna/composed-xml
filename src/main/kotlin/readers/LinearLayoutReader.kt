@@ -5,15 +5,19 @@ import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
 
-class LinearLayoutReader(private val document: LayoutElement) {
+class LinearLayoutReader(
+    private val layoutElement: LayoutElement,
+    private val parentNode: ViewNode?
+) {
 
     fun node(): LinearLayoutNode {
         return LinearLayoutNode(
             LinearLayoutNode.Info(
-                id = document.getViewIdNameTag(),
-                orientation = getOrientation(document)
+                id = layoutElement.getViewIdNameTag(),
+                orientation = getOrientation(layoutElement)
             ),
-            children = children()
+            children = children(),
+            parent = parentNode
         )
     }
 
@@ -28,23 +32,43 @@ class LinearLayoutReader(private val document: LayoutElement) {
     }
 
     private fun children(): Iterable<ViewNode> {
-        return object : Iterator<ViewNode>, Iterable<ViewNode> {
-
-            private var currentIndex = 0
-
-            override fun hasNext(): Boolean = currentIndex < document.getElementsByTagName("TextView").length
-
-            override fun next(): ViewNode {
-                val list: NodeList = document.getElementsByTagName("TextView")
-                val element = list.item(currentIndex) as Element
-                currentIndex++
-                return TextViewReader(LayoutElement(element)).node()
-            }
+        return object : Iterable<ViewNode> {
 
             override fun iterator(): Iterator<ViewNode> {
-                return this
-            }
+                return object : Iterator<ViewNode> {
+                    override fun hasNext(): Boolean {
+                        return currentIndex < totalNodeList.size
+                    }
 
+                    private var currentIndex = 0
+
+                    val textViews = layoutElement.getElementsByTagName("TextView")
+                    val linearLayouts = layoutElement.getElementsByTagName("LinearLayout")
+                    val totalNodeList: MutableList<Element> = mutableListOf()
+
+                    init {
+                        writeInList(textViews)
+                        writeInList(linearLayouts)
+                    }
+
+                    override fun next(): ViewNode {
+                        val element = totalNodeList[currentIndex]
+                        currentIndex++
+                        return if (element.nodeName == "TextView")
+                            TextViewReader(LayoutElement(element), node()).node()
+                        else
+                            LinearLayoutReader(LayoutElement(element), node()).node()
+                    }
+
+                    private fun writeInList(nodeList: NodeList) {
+                        for (i in 0 until nodeList.length) {
+                            val element = nodeList.item(i) as Element
+                            if (element.parentNode == layoutElement.element)
+                                totalNodeList.add(element)
+                        }
+                    }
+                }
+            }
         }
     }
 
