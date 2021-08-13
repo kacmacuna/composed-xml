@@ -2,6 +2,7 @@ package generators.nodes
 
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import generators.nodes.elements.colors.ColorElement
 
@@ -11,6 +12,13 @@ class TextViewNode(
     override val children: Iterable<ViewNode> = emptyList()
 
     override fun generate(): FunSpec {
+        return FunSpec.builder(info.id)
+            .addAnnotation(composeAnnotation())
+            .addCode(body())
+            .build()
+    }
+
+    override fun body(): CodeBlock {
         val mainStatementBuilder = StringBuilder()
         mainStatementBuilder.append("""Text("${info.text}"""")
         if (info.textColor.isEmpty().not()) {
@@ -20,8 +28,8 @@ class TextViewNode(
             mainStatementBuilder.append(""", fontSize = ${info.fontSize}.sp""")
         }
         mainStatementBuilder.append(')')
-        return FunSpec.builder(info.id)
-            .addAnnotation(composeAnnotation())
+
+        return CodeBlock.builder()
             .addStatement(mainStatementBuilder.toString())
             .build()
     }

@@ -24,7 +24,7 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Column { }""".trimIndent()
+        val expectedBody = "Column {}"
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -45,7 +45,7 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row { }""".trimIndent()
+        val expectedBody = """Row {}""".trimIndent()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
