@@ -3,6 +3,11 @@ package readers
 import generators.ComposeGenerator
 import generators.ComposeGeneratorImpl
 import org.xml.sax.InputSource
+import readers.elements.ButtonElement
+import readers.elements.LayoutElement
+import readers.elements.LinearLayoutElement
+import readers.elements.TextViewElement
+import readers.tags.ViewTags
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -16,16 +21,11 @@ class XmlReaderImpl : XmlReader {
         val dbf = DocumentBuilderFactory.newInstance()
         val db = dbf.newDocumentBuilder()
         val document = db.parse(InputSource(StringReader(content)))
-        return when (document.documentElement.nodeName) {
-            "TextView" -> ComposeGeneratorImpl(
-                TextViewReader(LayoutElement(document.documentElement), null).node(),
-                fileName
-            )
-            "LinearLayout" -> ComposeGeneratorImpl(
-                LinearLayoutReader(LayoutElement(document.documentElement), null).node(),
-                fileName
-            )
-            else -> TODO()
-        }
+        return ComposeGeneratorImpl(
+            ViewTags.fromString(document.documentElement.nodeName).toLayoutElement(
+                document.documentElement, null
+            ).node(),
+            fileName
+        )
     }
 }

@@ -1,19 +1,20 @@
-package readers
+package readers.elements
 
 import generators.nodes.LinearLayoutNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
+import readers.tags.ViewTags
 
-class LinearLayoutReader(
-    private val layoutElement: LayoutElement,
+class LinearLayoutElement(
+    private val layoutElement: Element,
     private val parentNode: ViewNode?
-) {
+) : LayoutElement<LinearLayoutNode>(layoutElement) {
 
-    fun node(): LinearLayoutNode {
+    override fun node(): LinearLayoutNode {
         return LinearLayoutNode(
             LinearLayoutNode.Info(
-                id = layoutElement.getViewIdNameTag(),
+                id = getViewIdNameTag(),
                 orientation = getOrientation(layoutElement)
             ),
             children = children(),
@@ -42,28 +43,25 @@ class LinearLayoutReader(
 
                     private var currentIndex = 0
 
-                    val textViews = layoutElement.getElementsByTagName("TextView")
-                    val linearLayouts = layoutElement.getElementsByTagName("LinearLayout")
                     val totalNodeList: MutableList<Element> = mutableListOf()
 
                     init {
-                        writeInList(textViews)
-                        writeInList(linearLayouts)
+                        ViewTags.values().map {
+                            layoutElement.getElementsByTagName(it.value)
+                        }.forEach { writeInList(it) }
                     }
 
                     override fun next(): ViewNode {
                         val element = totalNodeList[currentIndex]
                         currentIndex++
-                        return if (element.nodeName == "TextView")
-                            TextViewReader(LayoutElement(element), node()).node()
-                        else
-                            LinearLayoutReader(LayoutElement(element), node()).node()
+
+                        return ViewTags.fromString(element.nodeName).toLayoutElement(element, node()).node()
                     }
 
                     private fun writeInList(nodeList: NodeList) {
                         for (i in 0 until nodeList.length) {
                             val element = nodeList.item(i) as Element
-                            if (element.parentNode == layoutElement.element)
+                            if (element.parentNode == layoutElement)
                                 totalNodeList.add(element)
                         }
                     }
