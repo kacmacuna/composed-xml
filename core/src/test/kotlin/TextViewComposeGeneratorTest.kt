@@ -1,7 +1,6 @@
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import readers.XmlReader
