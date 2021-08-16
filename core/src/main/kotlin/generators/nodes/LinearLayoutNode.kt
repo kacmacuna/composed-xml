@@ -1,5 +1,6 @@
 package generators.nodes
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -14,6 +15,7 @@ class LinearLayoutNode(
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
+            .addAnnotation(composeAnnotation())
             .addCode(body())
             .build()
     }
@@ -42,6 +44,10 @@ class LinearLayoutNode(
     }
 
     private fun hasAncestors() = ancestors().iterator().hasNext()
+
+    private fun composeAnnotation() = AnnotationSpec.builder(
+        ClassName("androidx.compose.runtime", "Composable")
+    ).build()
 
 
     private fun ancestors(): Iterable<ViewNode> {

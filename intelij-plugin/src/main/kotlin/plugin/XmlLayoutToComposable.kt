@@ -6,6 +6,7 @@ import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
+import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
 import readers.XmlReader
@@ -23,8 +24,11 @@ class XmlLayoutToComposable : AnAction() {
         )
         descriptor.title = "To Composed"
         descriptor.description = "Translate xml layout files to composable file"
+        val contentRootForFile = contentRootFile(e)
+        descriptor.roots = listOf(contentRootForFile)
 
-        FileChooser.chooseFile(descriptor, e.project, null) {
+
+        FileChooser.chooseFile(descriptor, e.project, e.project?.projectFile) {
             val isXml = it.extension == "xml"
             val isLayoutFile = it.path.contains("layout")
             if (isXml && isLayoutFile) {
@@ -38,15 +42,19 @@ class XmlLayoutToComposable : AnAction() {
         }
     }
 
+    private fun contentRootFile(e: AnActionEvent) =
+        ProjectFileIndex.getInstance(e.project!!).getContentRootForFile(e.project?.projectFile!!)
+
     private fun chooseFileLocation(composedFileName: String, layoutFile: VirtualFile?, e: AnActionEvent) {
         if (layoutFile == null) return
 
         val descriptor = FileChooserDescriptor(
             true, true, false, false, false, false
         )
-        descriptor.title = "Generate Compose File"
+        val contentRootForFile = contentRootFile(e)
         descriptor.title = "Generate Compose File From Xml Layout"
-        FileChooser.chooseFile(descriptor, e.project, null) {
+        descriptor.roots = listOf(contentRootForFile)
+        FileChooser.chooseFile(descriptor, e.project, e.project?.projectFile) {
             val app: Application = ApplicationManager.getApplication()
             app.runWriteAction { createNewFile(layoutFile, composedFileName, it) }
         }
