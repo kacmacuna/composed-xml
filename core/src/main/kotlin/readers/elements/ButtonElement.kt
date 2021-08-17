@@ -14,7 +14,7 @@ class ButtonElement(
     override fun node(): ButtonNode {
         return ButtonNode(
             info = getInfo(),
-            parent = parentNode
+            _parent = parentNode
         )
     }
 

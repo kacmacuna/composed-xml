@@ -14,12 +14,16 @@ fun CodeBlock.Builder.addCodeBlockIf(
 }
 
 fun CodeBlock.Builder.addCodeIf(
-    condition: Boolean,
-    codeBlock: () -> String
+    condition: Boolean?,
+    codeBlock: () -> String?
 ): CodeBlock.Builder {
-    return if (condition)
-        add(codeBlock())
-    else
+    return if (condition == true) {
+        codeBlock()?.let {
+            add(it)
+        } ?: kotlin.run {
+            this
+        }
+    } else
         this
 }
 

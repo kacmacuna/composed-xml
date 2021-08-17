@@ -10,8 +10,11 @@ import poet.addCodeIf
 class LinearLayoutNode(
     private val info: Info,
     override val children: Iterable<ViewNode>,
-    override val parent: ViewNode?,
+    private val _parent: ViewNode?,
 ) : ViewNode {
+
+    override val parent: ParentViewNode?
+        get() = if (_parent != null) ParentViewNode(_parent) else null
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)

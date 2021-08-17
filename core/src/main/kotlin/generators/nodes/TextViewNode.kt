@@ -8,8 +8,12 @@ import generators.nodes.elements.colors.ColorElement
 
 class TextViewNode(
     private val info: Info,
-    override val parent: ViewNode?
+    private val _parent: ViewNode?
 ) : ViewNode {
+
+    override val parent: ParentViewNode?
+        get() = if (_parent != null) ParentViewNode(_parent) else null
+
     override val children: Iterable<ViewNode> = emptyList()
 
     override fun function(): FunSpec {

@@ -123,4 +123,39 @@ class NestedLinearLayoutTest {
         MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
     }
 
+    @Test
+    fun `given Button is nested in hLinearLayout and it is nested in vLinearLayout, function should be Column{Row{Text(Hello)}}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/vertical"
+                android:orientation="vertical">
+                
+                <LinearLayout
+                android:id="@+id/horizontal"
+                android:orientation="horizontal">
+                
+                    <Button
+                        android:id="@+id/title"
+                        android:text="Hello"/>
+                        
+                </LinearLayout>
+                
+            </LinearLayout>""".trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Column {\n\tRow {\n\t\tButton(onClick = {}) {\n\t\t\tText(\"Hello\")\n\t\t}\n\t}\n}"
+
+        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+
+        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
+    }
+
 }

@@ -18,7 +18,7 @@ class LinearLayoutElement(
                 orientation = getOrientation(layoutElement)
             ),
             children = children(),
-            parent = parentNode
+            _parent = parentNode
         )
     }
 

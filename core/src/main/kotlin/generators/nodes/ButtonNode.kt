@@ -9,8 +9,11 @@ import poet.addCodeIf
 
 class ButtonNode(
     private val info: Info,
-    override val parent: ViewNode?
+    private val _parent: ViewNode?
 ) : ViewNode {
+
+    override val parent: ParentViewNode?
+        get() = if (_parent != null) ParentViewNode(_parent) else null
 
     override val children: Iterable<ViewNode>
         get() = emptyList()
@@ -23,25 +26,19 @@ class ButtonNode(
     }
 
     override fun body(): CodeBlock {
-        val mainStatementBuilder = StringBuilder()
-
-        if (info.text.isNotEmpty())
-            mainStatementBuilder.append("""Text("${info.text}"""")
-        if (info.textColor.isEmpty().not()) {
-            mainStatementBuilder.append(""", color = ${info.textColor.statement()}""")
-        }
-        if (info.fontSize > 0) {
-            mainStatementBuilder.append(""", fontSize = ${info.fontSize}.sp""")
-        }
-
-        mainStatementBuilder.append("\n}")
 
         return CodeBlock.builder()
             .add("Button(onClick = {}) {\n")
+            .addCodeIf(parent?.hasAncestors()) {
+                "\t" + parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
+            }
             .addCodeIf(info.text.isNotEmpty()) { "\tText(\"${info.text}\"" }
             .addCodeIf(info.textColor.isEmpty().not()) { ", color = ${info.textColor.statement()}" }
             .addCodeIf(info.text.isNotEmpty()) { ")" }
-            .add("\n}")
+            .add("\n")
+            .addCodeIf(parent?.hasAncestors()) { "\t"+ parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it } }
+            .add("}")
+            .addCodeIf(parent?.hasAncestors()) { "\n" }
             .build()
     }
 

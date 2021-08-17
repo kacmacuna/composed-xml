@@ -15,7 +15,7 @@ class TextViewElement(
     override fun node(): TextViewNode {
         return TextViewNode(
             getInfo(),
-            parent = parentNode
+            _parent = parentNode
         )
     }
 
