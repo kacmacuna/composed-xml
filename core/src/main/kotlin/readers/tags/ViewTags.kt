@@ -1,16 +1,15 @@
 package readers.tags
 
+import generators.nodes.ParentViewNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
-import readers.elements.ButtonElement
-import readers.elements.LayoutElement
-import readers.elements.LinearLayoutElement
-import readers.elements.TextViewElement
+import readers.elements.*
 
 enum class ViewTags(val value: String) {
     TEXT_VIEW("TextView"),
     LINEAR_LAYOUT("LinearLayout"),
-    BUTTON("Button");
+    BUTTON("Button"),
+    FRAME_LAYOUT("FrameLayout");
 
     fun toLayoutElement(
         element: Element,
@@ -20,6 +19,7 @@ enum class ViewTags(val value: String) {
             TEXT_VIEW -> TextViewElement(element, parentNode)
             LINEAR_LAYOUT -> LinearLayoutElement(element, parentNode)
             BUTTON -> ButtonElement(element, parentNode)
+            FRAME_LAYOUT -> FrameLayoutElement(element, parentNode)
         }
     }
 

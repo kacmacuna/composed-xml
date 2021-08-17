@@ -30,13 +30,13 @@ class ButtonNode(
         return CodeBlock.builder()
             .add("Button(onClick = {}) {\n")
             .addCodeIf(parent?.hasAncestors()) {
-                "\t" + parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
+                parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
             }
             .addCodeIf(info.text.isNotEmpty()) { "\tText(\"${info.text}\"" }
             .addCodeIf(info.textColor.isEmpty().not()) { ", color = ${info.textColor.statement()}" }
             .addCodeIf(info.text.isNotEmpty()) { ")" }
             .add("\n")
-            .addCodeIf(parent?.hasAncestors()) { "\t"+ parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it } }
+            .addCodeIf(parent?.hasAncestors()) { parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it } }
             .add("}")
             .addCodeIf(parent?.hasAncestors()) { "\n" }
             .build()

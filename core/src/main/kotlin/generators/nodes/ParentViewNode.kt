@@ -7,7 +7,7 @@ class ParentViewNode(
     fun hasAncestors() = ancestors().iterator().hasNext()
 
     fun ancestors(): Iterable<ViewNode> {
-        return ancestorsIterate(mutableListOf(), this)
+        return ancestorsIterate(mutableListOf(this), this)
     }
 
     private fun ancestorsIterate(mutableList: MutableList<ViewNode>, viewNode: ViewNode): Iterable<ViewNode> {

@@ -1,3 +1,5 @@
+package nested
+
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert

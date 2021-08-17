@@ -5,11 +5,11 @@ import org.w3c.dom.Element
 import java.util.*
 
 abstract class LayoutElement<out T : ViewNode>(
-    private val element: Element
-) : Element by element {
+    val originalElement: Element
+) : Element by originalElement {
 
     fun getViewIdNameTag(): String {
-        return element.getAttribute("android:id").removePrefix("@+id/")
+        return originalElement.getAttribute("android:id").removePrefix("@+id/")
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 
