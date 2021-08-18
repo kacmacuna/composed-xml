@@ -1,10 +1,10 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
 import com.squareup.kotlinpoet.ClassName
 
-class ColorElementResource(
+class ColorAttributeResource(
     private val input: String
-) : ColorElement {
+) : ColorAttribute {
 
     override fun statement(): String {
         val textColor = input.removePrefix("@color/")

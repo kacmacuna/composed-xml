@@ -2,20 +2,23 @@ package readers.elements
 
 import generators.nodes.LinearLayoutNode
 import generators.nodes.ViewNode
+import generators.nodes.attributes.colors.ColorAttributeParser
 import org.w3c.dom.Element
-import org.w3c.dom.NodeList
-import readers.tags.ViewTags
 
 class LinearLayoutElement(
     private val layoutElement: Element,
     private val parentNode: ViewNode?
 ) : LayoutElement<LinearLayoutNode>(layoutElement) {
 
+    private val colorAttributeParser = ColorAttributeParser()
+
     override fun node(): LinearLayoutNode {
         return LinearLayoutNode(
             LinearLayoutNode.Info(
                 id = getViewIdNameTag(),
-                orientation = getOrientation(layoutElement)
+                orientation = getOrientation(layoutElement),
+                alignment = getAlignmentFromGravity(),
+                backgroundColor = colorAttributeParser.parse(getAttribute("android:background"))
             ),
             children = children(),
             _parent = parentNode

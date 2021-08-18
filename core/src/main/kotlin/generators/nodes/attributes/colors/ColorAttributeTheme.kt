@@ -1,8 +1,8 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
 import com.squareup.kotlinpoet.ClassName
 
-class ColorElementTheme : ColorElement {
+class ColorAttributeTheme : ColorAttribute {
     override fun statement(): String {
         TODO("Not yet implemented")
     }

@@ -1,8 +1,8 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
 import com.squareup.kotlinpoet.ClassName
 
-interface ColorElement {
+interface ColorAttribute {
 
     fun statement(): String
     fun imports(): Iterable<ClassName>

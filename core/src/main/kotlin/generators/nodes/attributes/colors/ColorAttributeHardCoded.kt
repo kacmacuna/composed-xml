@@ -1,10 +1,10 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
 import com.squareup.kotlinpoet.ClassName
 
-class ColorElementHardCoded(
+class ColorAttributeHardCoded(
     private val input: String
-) : ColorElement {
+) : ColorAttribute {
     override fun statement(): String {
         return """Color(android.graphics.Color.parseColor("$input"))""".trimIndent()
     }

@@ -11,7 +11,7 @@ class FrameLayoutGeneratorTest {
     private val xmlReader: XmlReader = XmlReaderImpl()
 
     @Test
-    fun `given layouts root view is FrameLayout, function should be Box{}`(){
+    fun `given FrameLayout, function should be Box{}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <FrameLayout android:id="@+id/content" /> """.trimIndent(),
@@ -30,7 +30,7 @@ class FrameLayoutGeneratorTest {
     }
 
     @Test
-    fun `given layouts root view is FrameLayout with gravity left,center, function should be Box(TopStart){}`(){
+    fun `given FrameLayout with gravity left,center, function should be Box(TopStart){}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <FrameLayout 
@@ -42,7 +42,44 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (contentAlignment = Alignment.TopStart) {\n\n}"
+        val expectedBody = "Box (contentAlignment = Box.Alignment.TopStart) {\n\n}"
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given FrameLayout with background blue, function should be Box(background(blue)){}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <FrameLayout 
+                android:id="@+id/content"
+                android:background="@color/blue"/> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Box (modifier = Modifier.background(color = colorResource(R.color.blue))) {\n\n}"
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given FrameLayout with gravity start bkg blue, function should be Box(background(blue), Left){}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <FrameLayout 
+                android:id="@+id/content"
+                android:gravity="start"
+                android:background="@color/blue"/> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Box (modifier = Modifier.background(color = colorResource(R.color.blue)), contentAlignment = Box.Alignment.Start) {\n\n}"
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }

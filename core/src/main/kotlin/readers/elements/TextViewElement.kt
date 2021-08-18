@@ -2,7 +2,7 @@ package readers.elements
 
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
-import generators.nodes.elements.colors.ColorElementParser
+import generators.nodes.attributes.colors.ColorAttributeParser
 import org.w3c.dom.Element
 
 class TextViewElement(
@@ -10,7 +10,7 @@ class TextViewElement(
     private val parentNode: ViewNode?
 ) : LayoutElement<TextViewNode>(layoutElement) {
 
-    private val colorElementParser = ColorElementParser()
+    private val colorAttributeParser = ColorAttributeParser()
 
     override fun node(): TextViewNode {
         return TextViewNode(
@@ -22,7 +22,7 @@ class TextViewElement(
     fun getInfo() = TextViewNode.Info(
         id = getViewIdNameTag(),
         text = getText(layoutElement),
-        textColor = colorElementParser.parse(layoutElement.getAttribute("android:textColor")),
+        textColor = colorAttributeParser.parse(layoutElement.getAttribute("android:textColor")),
         fontSize = getFontSize(layoutElement),
     )
 

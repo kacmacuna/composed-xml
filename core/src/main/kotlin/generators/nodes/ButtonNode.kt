@@ -4,7 +4,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import generators.nodes.elements.colors.ColorElement
+import generators.nodes.attributes.colors.ColorAttribute
 import poet.addCodeIf
 
 class ButtonNode(
@@ -57,7 +57,7 @@ class ButtonNode(
     data class Info(
         val id: String,
         val text: String,
-        val textColor: ColorElement,
+        val textColor: ColorAttribute,
         val fontSize: Int
     )
 }

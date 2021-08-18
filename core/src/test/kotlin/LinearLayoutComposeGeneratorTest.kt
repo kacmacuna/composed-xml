@@ -53,4 +53,40 @@ class LinearLayoutComposeGeneratorTest {
         MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
     }
 
+    @Test
+    fun `given layout has green background, generated function should be Row(background(green)){}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/title"
+                android:background="@color/green" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = """Row(modifier = Modifier.background(color = colorResource(R.color.green))) {}""".trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given layout has end gravity, generated function should be Row(Row,Alignment,End){}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/title"
+                android:gravity="end" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = """Row(horizontalArrangement = Arrangement.End) {}""".trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
 }

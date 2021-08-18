@@ -1,16 +1,16 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
-class ColorElementParser {
+class ColorAttributeParser {
 
-    fun parse(input: String): ColorElement {
+    fun parse(input: String): ColorAttribute {
         return if (input.contains("@color/"))
-            ColorElementResource(input)
+            ColorAttributeResource(input)
         else if (input.contains("#"))
-            ColorElementHardCoded(input)
+            ColorAttributeHardCoded(input)
         else if (input.contains("?attr/") || input.contains("?/"))
-            ColorElementTheme()
+            ColorAttributeTheme()
         else if (input.isEmpty())
-            ColorElementEmpty
+            ColorAttributeEmpty
         else
             throw IllegalStateException("Invalid Color: $input")
     }

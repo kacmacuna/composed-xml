@@ -1,8 +1,8 @@
-package generators.nodes.elements.colors
+package generators.nodes.attributes.colors
 
 import com.squareup.kotlinpoet.ClassName
 
-object ColorElementEmpty : ColorElement {
+object ColorAttributeEmpty : ColorAttribute {
     override fun statement(): String {
         return ""
     }

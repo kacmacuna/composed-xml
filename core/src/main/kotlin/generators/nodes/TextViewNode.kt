@@ -4,7 +4,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import generators.nodes.elements.colors.ColorElement
+import generators.nodes.attributes.colors.ColorAttribute
 
 class TextViewNode(
     private val info: Info,
@@ -54,7 +54,7 @@ class TextViewNode(
     data class Info(
         val id: String,
         val text: String,
-        val textColor: ColorElement,
+        val textColor: ColorAttribute,
         val fontSize: Int
     )
 

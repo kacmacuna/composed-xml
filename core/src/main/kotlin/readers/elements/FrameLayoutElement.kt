@@ -2,6 +2,7 @@ package readers.elements
 
 import generators.nodes.FrameLayoutNode
 import generators.nodes.ViewNode
+import generators.nodes.attributes.colors.ColorAttributeParser
 import org.w3c.dom.Element
 
 class FrameLayoutElement(
@@ -9,26 +10,18 @@ class FrameLayoutElement(
     private val parentNode: ViewNode?
 ) : LayoutElement<FrameLayoutNode>(element) {
 
+    private val colorAttributeParser = ColorAttributeParser()
+
     override fun node(): FrameLayoutNode {
         return FrameLayoutNode(
             children = Iterable { ViewGroupIterator(this) },
             info = FrameLayoutNode.Info(
                 id = getViewIdNameTag(),
-                alignment = getAlignmentFromGravity()
+                alignment = getAlignmentFromGravity(),
+                backgroundColorAttribute = colorAttributeParser.parse(getAttribute("android:background"))
             ),
             _parent = parentNode
         )
-    }
-
-    private fun getAlignmentFromGravity(): FrameLayoutNode.Alignment {
-        return when(getAttribute("android:gravity")){
-            "top|start", "start|top" -> FrameLayoutNode.Alignment.TopStart
-            "center" -> FrameLayoutNode.Alignment.Center
-            "bottom|center", "center|bottom" -> FrameLayoutNode.Alignment.BottomCenter
-            "center|end", "end|center" -> FrameLayoutNode.Alignment.CenterEnd
-            "" -> FrameLayoutNode.Alignment.NoAlignment
-            else -> TODO("Unhandled gravity types")
-        }
     }
 
 }

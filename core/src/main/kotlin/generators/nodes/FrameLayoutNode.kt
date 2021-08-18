@@ -4,6 +4,8 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import generators.nodes.attributes.Alignment
+import generators.nodes.attributes.colors.ColorAttribute
 import poet.addCodeBlockIf
 import poet.addCodeIf
 
@@ -26,9 +28,14 @@ class FrameLayoutNode(
     override fun body(): CodeBlock {
         return CodeBlock.builder()
             .add("Box")
+            .addCodeIf(info.hasAnyAttribute()) { " (" }
+            .addCodeIf(info.backgroundColorAttribute.isEmpty().not()) {
+                "modifier = Modifier.background(color = ${info.backgroundColorAttribute.statement()})"
+            }.addCodeIf(info.hasAnyModifierAndAlignment()) { ", " }
             .addCodeIf(info.alignment != Alignment.NoAlignment) {
-                " (contentAlignment = Alignment.${info.alignment.name})"
-            }.add(" {\n")
+                "contentAlignment = Box.Alignment.${info.alignment.name}"
+            }.addCodeIf(info.hasAnyAttribute()) { ")" }
+            .add(" {\n")
             .addCodeBlockIf(children.iterator().hasNext()) { childrenToCodeBlock() }
             .addCodeIf(parent?.hasAncestors()) { parent?.ancestors()?.joinToString { "\t" } }
             .addCodeIf(children.iterator().hasNext().not()) { "\n" }
@@ -57,29 +64,16 @@ class FrameLayoutNode(
 
     class Info(
         val id: String,
-        val alignment: Alignment
-    )
+        val alignment: Alignment,
+        val backgroundColorAttribute: ColorAttribute
+    ) {
+        fun hasAnyAttribute(): Boolean {
+            return alignment != Alignment.NoAlignment || backgroundColorAttribute.isEmpty().not()
+        }
 
-    enum class Alignment {
-        TopStart,
-        TopCenter,
-        TopEnd,
-        CenterStart,
-        Center,
-        CenterEnd,
-        BottomStart,
-        BottomCenter,
-        BottomEnd,
-
-        Top,
-        CenterVertically,
-        Bottom,
-
-        Start,
-        CenterHorizontally,
-        End,
-
-        NoAlignment;
+        fun hasAnyModifierAndAlignment(): Boolean {
+            return backgroundColorAttribute.isEmpty().not() && alignment != Alignment.NoAlignment
+        }
     }
 
 }

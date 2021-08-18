@@ -4,6 +4,8 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import generators.nodes.attributes.Alignment
+import generators.nodes.attributes.colors.ColorAttribute
 import poet.addCodeBlockIf
 import poet.addCodeIf
 
@@ -75,7 +77,9 @@ class LinearLayoutNode(
 
     class Info(
         val id: String,
-        val orientation: Orientation
+        val orientation: Orientation,
+        val alignment: Alignment,
+        val backgroundColor: ColorAttribute
     )
 
     enum class Orientation { Horizontal, Vertical; }
