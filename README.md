@@ -1,3 +1,3 @@
 # composed-xml
 
-## Inspired from - [Recompose](https://github.com/pocmo/recompose)
+## Inspired by - [Recompose](https://github.com/pocmo/recompose)
