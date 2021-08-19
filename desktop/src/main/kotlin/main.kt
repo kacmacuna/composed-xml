@@ -44,7 +44,7 @@ private fun EditorHeader() {
 
 @Composable
 private fun EditorBody(xmlReader: XmlReaderImpl) {
-    Row(Modifier.fillMaxSize(), Arrangement.spacedBy(5.dp)) {
+    Row(Modifier.wrapContentWidth().fillMaxHeight(), Arrangement.spacedBy(5.dp)) {
         val xmlValue = remember { mutableStateOf("") }
         val composableValue = remember { mutableStateOf("") }
         XmlEditor(xmlValue, xmlReader, composableValue)

@@ -141,4 +141,48 @@ class TextViewComposeGeneratorTest {
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
 
+    @Test
+    fun `given text defines W wrap_content and H match_parent function should be Text(wrapContentWidth(),fillMaxHeight())`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Hello" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = """
+            Text("Hello", modifier = Modifier.wrapContentWidth().fillMaxHeight())
+        """.trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given text defines W 20dp and H 30dp function should be Text(modifier,width(20dp),height(30dp))`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:text="Hello" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = """
+            Text("Hello", modifier = Modifier.width(20.dp).height(30.dp))
+        """.trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
 }

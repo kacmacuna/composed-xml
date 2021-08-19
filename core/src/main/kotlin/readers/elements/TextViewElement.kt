@@ -3,6 +3,7 @@ package readers.elements
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
 import generators.nodes.attributes.colors.ColorAttributeParser
+import generators.nodes.attributes.layout.LayoutSizeAttributeParser
 import org.w3c.dom.Element
 
 class TextViewElement(
@@ -11,6 +12,7 @@ class TextViewElement(
 ) : LayoutElement<TextViewNode>(layoutElement) {
 
     private val colorAttributeParser = ColorAttributeParser()
+    private val layoutSizeAttributeParser = LayoutSizeAttributeParser()
 
     override fun node(): TextViewNode {
         return TextViewNode(
@@ -21,17 +23,19 @@ class TextViewElement(
 
     fun getInfo() = TextViewNode.Info(
         id = getViewIdNameTag(),
-        text = getText(layoutElement),
-        textColor = colorAttributeParser.parse(layoutElement.getAttribute("android:textColor")),
-        fontSize = getFontSize(layoutElement),
+        text = getText(),
+        textColor = colorAttributeParser.parse(getAttribute("android:textColor")),
+        fontSize = getFontSize(),
+        width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
+        height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height"))
     )
 
-    private fun getFontSize(documentElement: Element): Int {
-        return documentElement.getAttribute("android:textSize").ifEmpty { return 0 }.removeSuffix("sp").toInt()
+    private fun getFontSize(): Int {
+        return getAttribute("android:textSize").ifEmpty { return 0 }.removeSuffix("sp").toInt()
     }
 
-    private fun getText(documentElement: Element): String {
-        return documentElement.getAttribute("android:text")
+    private fun getText(): String {
+        return getAttribute("android:text")
     }
 
 }

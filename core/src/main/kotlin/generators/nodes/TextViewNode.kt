@@ -5,6 +5,8 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.layout.LayoutHeight
+import generators.nodes.attributes.layout.LayoutWidth
 
 class TextViewNode(
     private val info: Info,
@@ -53,6 +55,8 @@ class TextViewNode(
 
     data class Info(
         val id: String,
+        val width: LayoutWidth,
+        val height: LayoutHeight,
         val text: String,
         val textColor: ColorAttribute,
         val fontSize: Int
