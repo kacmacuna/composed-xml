@@ -52,8 +52,28 @@ class ButtonComposeGeneratorTest {
             importsAsStrings, CoreMatchers.hasItems(
                 "androidx.compose.material.Button",
                 "androidx.compose.ui.res.colorResource",
-            )
+                "androidx.compose.material.Text",
+                )
         )
+    }
+
+    @Test
+    fun `given button defines font size, function should be Button{Text(fontSize = 20,sp)}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <Button 
+                android:id="@+id/title"
+                android:text="Hello"
+                android:textSize="20sp"/>""".trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Button(onClick = {}) {\n\tText(\"Hello\", fontSize = 20.sp)\n}"
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
 
 }

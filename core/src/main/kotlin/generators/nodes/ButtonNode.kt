@@ -34,9 +34,12 @@ class ButtonNode(
             }
             .addCodeIf(info.text.isNotEmpty()) { "\tText(\"${info.text}\"" }
             .addCodeIf(info.textColor.isEmpty().not()) { ", color = ${info.textColor.statement()}" }
+            .addCodeIf(info.fontSize > 0) { ", fontSize = ${info.fontSize}.sp" }
             .addCodeIf(info.text.isNotEmpty()) { ")" }
             .add("\n")
-            .addCodeIf(parent?.hasAncestors()) { parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it } }
+            .addCodeIf(parent?.hasAncestors()) {
+                parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
+            }
             .add("}")
             .addCodeIf(parent?.hasAncestors()) { "\n" }
             .build()
@@ -49,7 +52,8 @@ class ButtonNode(
     override fun imports(): Iterable<ClassName> {
         return listOf(
             ClassName("androidx.compose.material", "Button"),
-            ClassName("androidx.compose.ui.unit", "sp")
+            ClassName("androidx.compose.ui.unit", "sp"),
+            ClassName("androidx.compose.material", "Text"),
         ) + info.textColor.imports()
     }
 
