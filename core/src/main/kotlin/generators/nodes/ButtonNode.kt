@@ -4,13 +4,17 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.layout.LayoutHeight
+import generators.nodes.attributes.layout.LayoutWidth
+import poet.addCodeBlockIf
 import poet.addCodeIf
 
 class ButtonNode(
     private val info: Info,
     private val _parent: ViewNode?
 ) : ViewNode {
+
+    private val textViewNode = TextViewNode(info.textInfo, this)
 
     override val parent: ParentViewNode?
         get() = if (_parent != null) ParentViewNode(_parent) else null
@@ -19,27 +23,28 @@ class ButtonNode(
         get() = emptyList()
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.textInfo.id)
             .addAnnotation(composeAnnotation())
             .addCode(body())
             .build()
     }
 
     override fun body(): CodeBlock {
-
         return CodeBlock.builder()
-            .add("Button(onClick = {}) {\n")
+            .add("Button(onClick = {}")
+            .addCodeIf(info.width.statement().isNotEmpty() || info.height.statement().isNotEmpty()) {
+                ", modifier = Modifier.${info.width.statement()}.${info.height.statement()}"
+            }
+            .add(") {\n")
             .addCodeIf(parent?.hasAncestors()) {
                 parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
             }
-            .addCodeIf(info.text.isNotEmpty()) { "\tText(\"${info.text}\"" }
-            .addCodeIf(info.textColor.isEmpty().not()) { ", color = ${info.textColor.statement()}" }
-            .addCodeIf(info.fontSize > 0) { ", fontSize = ${info.fontSize}.sp" }
-            .addCodeIf(info.text.isNotEmpty()) { ")" }
-            .add("\n")
+            .addCodeIf(info.textInfo.text.isNotEmpty()) { "\t" }
+            .addCodeBlockIf(info.textInfo.text.isNotEmpty()) { textViewNode.body() }
             .addCodeIf(parent?.hasAncestors()) {
                 parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
             }
+            .addCodeIf(info.textInfo.text.isEmpty()) { "\n" }
             .add("}")
             .addCodeIf(parent?.hasAncestors()) { "\n" }
             .build()
@@ -54,14 +59,13 @@ class ButtonNode(
             ClassName("androidx.compose.material", "Button"),
             ClassName("androidx.compose.ui.unit", "sp"),
             ClassName("androidx.compose.material", "Text"),
-        ) + info.textColor.imports()
+        ) + info.textInfo.textColor.imports()
     }
 
 
     data class Info(
-        val id: String,
-        val text: String,
-        val textColor: ColorAttribute,
-        val fontSize: Int
+        val textInfo: TextViewNode.Info,
+        val width: LayoutWidth,
+        val height: LayoutHeight
     )
 }

@@ -7,11 +7,11 @@ class LayoutSizeMatchParent private constructor(
 ) : LayoutWidth, LayoutHeight{
 
     override fun statement(): String {
-        TODO("Not yet implemented")
+        return "$statement()"
     }
 
     override fun imports(): Iterable<ClassName> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     @Suppress("FunctionName")

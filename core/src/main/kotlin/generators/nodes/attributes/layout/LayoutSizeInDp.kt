@@ -12,7 +12,7 @@ class LayoutSizeInDp private constructor(
     }
 
     override fun imports(): Iterable<ClassName> {
-        return listOf(ClassName("androidx.compose.ui.unit", "sp"))
+        return listOf(ClassName("androidx.compose.ui.unit", "dp"))
     }
 
     @Suppress("FunctionName")

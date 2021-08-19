@@ -34,6 +34,9 @@ class TextViewNode(
         if (info.fontSize > 0) {
             mainStatementBuilder.append(""", fontSize = ${info.fontSize}.sp""")
         }
+        if (info.width.statement().isNotEmpty() || info.height.statement().isNotEmpty()) {
+            mainStatementBuilder.append(", modifier = Modifier.${info.width.statement()}.${info.height.statement()}")
+        }
         mainStatementBuilder.append(')')
 
         return CodeBlock.builder()
