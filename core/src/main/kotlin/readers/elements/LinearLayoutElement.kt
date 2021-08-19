@@ -16,8 +16,8 @@ class LinearLayoutElement(
         return LinearLayoutNode(
             LinearLayoutNode.Info(
                 id = getViewIdNameTag(),
-                orientation = getOrientation(layoutElement),
-                alignment = getAlignmentFromGravity(),
+                orientation = getOrientation(),
+                arrangement = getArrangement(),
                 backgroundColor = colorAttributeParser.parse(getAttribute("android:background"))
             ),
             children = children(),
@@ -25,14 +25,28 @@ class LinearLayoutElement(
         )
     }
 
-    private fun getOrientation(documentElement: Element): LinearLayoutNode.Orientation {
-        val orientation = documentElement.getAttribute("android:orientation")
+    private fun getOrientation(): LinearLayoutNode.Orientation {
+        val orientation = layoutElement.getAttribute("android:orientation")
         return if (orientation == "vertical")
             LinearLayoutNode.Orientation.Vertical
         else if (orientation == "horizontal" || orientation.isEmpty())
             LinearLayoutNode.Orientation.Horizontal
         else
             throw IllegalStateException("Invalid orientation type: $orientation")
+    }
+
+    private fun getArrangement(): LinearLayoutNode.Arrangement {
+        return when (val gravity = layoutElement.getAttribute("android:gravity")) {
+            "top" -> LinearLayoutNode.Arrangement.Top
+            "bottom" -> LinearLayoutNode.Arrangement.Bottom
+            "center" -> LinearLayoutNode.Arrangement.Center
+            "center_vertical" -> LinearLayoutNode.Arrangement.CenterVertical
+            "center_horizontal" -> LinearLayoutNode.Arrangement.CenterHorizontal
+            "start", "left" -> LinearLayoutNode.Arrangement.Start
+            "end", "right" -> LinearLayoutNode.Arrangement.End
+            "" -> LinearLayoutNode.Arrangement.NoArrangement
+            else -> throw IllegalStateException("Invalid linear layout gravity type: $gravity")
+        }
     }
 
     private fun children(): Iterable<ViewNode> {

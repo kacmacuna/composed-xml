@@ -12,7 +12,7 @@ class LinearLayoutComposeGeneratorTest {
     private val xmlReader: XmlReader = XmlReaderImpl()
 
     @Test
-    fun `given layout is vertical generated function should include Column`() {
+    fun `given layout is vertical, function should include Column`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -33,7 +33,7 @@ class LinearLayoutComposeGeneratorTest {
     }
 
     @Test
-    fun `given layout is horizontal generated function should include Row`() {
+    fun `given layout is horizontal, function should include Row`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -54,7 +54,7 @@ class LinearLayoutComposeGeneratorTest {
     }
 
     @Test
-    fun `given layout has green background, generated function should be Row(background(green)){}`() {
+    fun `given layout has green background, function should be Row(background(green)){}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -66,13 +66,14 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row(modifier = Modifier.background(color = colorResource(R.color.green))) {}""".trimIndent()
+        val expectedBody =
+            """Row (modifier = Modifier.background(color = colorResource(R.color.green))) {}""".trimIndent()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
 
     @Test
-    fun `given layout has end gravity, generated function should be Row(Row,Alignment,End){}`() {
+    fun `given layout has end gravity, function should be Row(Arrangement,End){}`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <LinearLayout
@@ -84,7 +85,49 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row(horizontalArrangement = Arrangement.End) {}""".trimIndent()
+        val expectedBody = """Row (horizontalArrangement = Arrangement.End) {}""".trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given vertical layout has end gravity, function should be Column(Arrangement,End){}`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/title"
+                android:gravity="end"
+                android:orientation="vertical" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = """Column (verticalArrangement = Arrangement.End) {}""".trimIndent()
+
+        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+    }
+
+    @Test
+    fun `given layout has end gravity and green background, function should be Column(background(green), Arrangement,End)`() {
+        val composeGenerator = xmlReader.read(
+            content = """ 
+            <LinearLayout
+                android:id="@+id/title"
+                android:gravity="end"
+                android:background="@color/green"
+                android:orientation="vertical" /> """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+        val titleFunction = file.members.first { it is FunSpec } as FunSpec
+
+        val expectedBody = "Column (\n" +
+                "\tmodifier = Modifier.background(color = colorResource(R.color.green)),\n" +
+                "\tverticalArrangement = Arrangement.End\n" +
+                ") {}"
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }

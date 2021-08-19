@@ -4,7 +4,6 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttribute
 import poet.addCodeBlockIf
 import poet.addCodeIf
@@ -28,8 +27,24 @@ class LinearLayoutNode(
 
     override fun body(): CodeBlock {
         return CodeBlock.builder()
-            .addCodeBlockIf(info.orientation == Orientation.Vertical) { CodeBlock.builder().add("Column {").build() }
-            .addCodeBlockIf(info.orientation == Orientation.Horizontal) { CodeBlock.builder().add("Row {").build() }
+            .addCodeIf(info.orientation == Orientation.Vertical) { "Column" }
+            .addCodeIf(info.orientation == Orientation.Horizontal) { "Row" }
+            .addCodeIf(info.hasAnyAttribute()) { " (" }
+            .addCodeIf(info.hasSeveralAttributes()) {
+                "\n\t"
+            }
+            .addCodeIf(info.backgroundColor.isEmpty().not()) {
+                "modifier = Modifier.background(color = ${info.backgroundColor.statement()})"
+            }
+            .addCodeIf(info.backgroundColor.isEmpty().not() && info.arrangement != Arrangement.NoArrangement) {
+                ",\n\t"
+            }
+            .addCodeIf(info.arrangement != Arrangement.NoArrangement) {
+                info.arrangement.statement(info.orientation)
+            }
+            .addCodeIf(info.hasSeveralAttributes()) { "\n" }
+            .addCodeIf(info.hasAnyAttribute()) { ")" }
+            .add(" {")
             .addCodeIf(children.iterator().hasNext()) { "\n" }
             .addCodeBlockIf(children.iterator().hasNext()) { childrenToCodeBlock() }
             .addCodeIf(hasAncestors()) { ancestors().joinToString { "\t" } }
@@ -78,9 +93,32 @@ class LinearLayoutNode(
     class Info(
         val id: String,
         val orientation: Orientation,
-        val alignment: Alignment,
+        val arrangement: Arrangement,
         val backgroundColor: ColorAttribute
-    )
+    ) {
+        fun hasAnyAttribute(): Boolean {
+            return arrangement != Arrangement.NoArrangement || backgroundColor.isEmpty().not()
+        }
+
+        fun hasSeveralAttributes(): Boolean {
+            return backgroundColor.isEmpty().not() && arrangement != Arrangement.NoArrangement
+        }
+    }
 
     enum class Orientation { Horizontal, Vertical; }
+    enum class Arrangement {
+        Start, End, Center, CenterHorizontal, CenterVertical, Top, Bottom, NoArrangement;
+
+
+        fun statement(orientation: Orientation): String {
+            return if (this == CenterHorizontal)
+                "horizontalArrangement = Arrangement.Center"
+            else if (this == CenterVertical)
+                "verticalArrangement  = Arrangement.Center"
+            else when (orientation) {
+                Orientation.Horizontal -> "horizontalArrangement = Arrangement.$name"
+                Orientation.Vertical -> "verticalArrangement = Arrangement.$name"
+            }
+        }
+    }
 }

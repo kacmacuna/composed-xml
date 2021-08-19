@@ -28,6 +28,7 @@ fun main() = application {
         MaterialTheme {
             Column {
                 EditorHeader()
+                Arrangement.Start
                 EditorBody(xmlReader)
             }
         }
