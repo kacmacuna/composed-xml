@@ -10,11 +10,11 @@
   * android:background
 * Button
   * android:id
-  * android:textSize
+  * android:text
   * android:textColor
   * android:textSize
 * TextView
   * android:id
-  * android:textSize
+  * android:text
   * android:textColor
   * android:textSize
