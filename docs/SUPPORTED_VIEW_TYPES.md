@@ -4,10 +4,15 @@
   * android:orientation
   * android:gravity
   * android:background
+  * android:layout_width
+  * android:layout_height
+  * android:weight
 * FrameLayout
   * android:orientation
   * android:gravity
   * android:background
+  * android:layout_width
+  * android:layout_height
 * Button
   * android:id
   * android:layout_width
@@ -15,6 +20,10 @@
   * android:text
   * android:textColor
   * android:textSize
+  * android:layout_width
+  * android:layout_height
+  * android:background
+  * android:weight
 * TextView
   * android:id
   * android:layout_width
@@ -22,3 +31,13 @@
   * android:text
   * android:textColor
   * android:textSize
+  * android:layout_width
+  * android:layout_height
+  * android:background
+  * android:weight
+* EditText
+  * android:id
+  * android:layout_width
+  * android:layout_height
+  * android:weight
+  * android:background
