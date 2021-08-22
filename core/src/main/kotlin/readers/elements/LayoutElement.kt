@@ -2,12 +2,17 @@ package readers.elements
 
 import generators.nodes.ViewNode
 import generators.nodes.attributes.Alignment
+import generators.nodes.attributes.colors.ColorAttributeParser
+import generators.nodes.attributes.layout.LayoutSizeAttributeParser
 import org.w3c.dom.Element
 import java.util.*
 
 abstract class LayoutElement<out T : ViewNode>(
     val originalElement: Element
 ) : Element by originalElement {
+
+    protected val colorAttributeParser = ColorAttributeParser()
+    protected val layoutSizeAttributeParser = LayoutSizeAttributeParser()
 
     protected fun getViewIdNameTag(): String {
         return originalElement.getAttribute("android:id").removePrefix("@+id/")

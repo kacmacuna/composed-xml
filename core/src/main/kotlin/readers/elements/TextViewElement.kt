@@ -2,22 +2,15 @@ package readers.elements
 
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
-import generators.nodes.attributes.colors.ColorAttributeParser
-import generators.nodes.attributes.layout.LayoutSizeAttributeParser
 import org.w3c.dom.Element
 
 class TextViewElement(
-    private val layoutElement: Element,
-    private val parentNode: ViewNode?
+    layoutElement: Element
 ) : LayoutElement<TextViewNode>(layoutElement) {
-
-    private val colorAttributeParser = ColorAttributeParser()
-    private val layoutSizeAttributeParser = LayoutSizeAttributeParser()
 
     override fun node(): TextViewNode {
         return TextViewNode(
-            getInfo(),
-            _parent = parentNode
+            getInfo()
         )
     }
 
@@ -27,7 +20,9 @@ class TextViewElement(
         textColor = colorAttributeParser.parse(getAttribute("android:textColor")),
         fontSize = getFontSize(),
         width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
-        height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height"))
+        height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
+        backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),
+        weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat()
     )
 
     private fun getFontSize(): Int {

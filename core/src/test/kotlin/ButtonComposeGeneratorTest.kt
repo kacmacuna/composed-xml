@@ -21,7 +21,10 @@ class ButtonComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Button(onClick = {}) {\n\n}"
+        val expectedBody = """
+            |Button(onClick = {}) {
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -43,7 +46,11 @@ class ButtonComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Button(onClick = {}) {\n\tText(\"Hello\", color = colorResource(R.color.blue))\n}"
+        val expectedBody = """
+            |Button(onClick = {}) {
+            |  Text("Hello", color = colorResource(R.color.blue))
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -71,7 +78,11 @@ class ButtonComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Button(onClick = {}) {\n\tText(\"Hello\", fontSize = 20.sp)\n}"
+        val expectedBody ="""
+            |Button(onClick = {}) {
+            |  Text("Hello", fontSize = 20.sp)
+            |}
+        """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -91,10 +102,9 @@ class ButtonComposeGeneratorTest {
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
-            Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
-            
-            }
-        """.trimIndent()
+            |Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
+            |}
+        """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -114,10 +124,9 @@ class ButtonComposeGeneratorTest {
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
-            Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
-            
-            }
-        """.trimIndent()
+            |Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
+            |}
+        """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }

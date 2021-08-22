@@ -5,26 +5,27 @@ import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
+import poet.addComposeAnnotation
 import poet.chained.ChainedMemberCall
 
-class TextViewNode(
+class EditTextNode(
     private val info: Info
 ) : ViewNode {
 
-
-    override val children: Iterable<ViewNode> = emptyList()
+    override val children: Iterable<ViewNode>
+        get() = emptyList()
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
-            .addAnnotation(composeAnnotation())
+            .addComposeAnnotation()
             .addCode(body())
             .build()
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("", "Text")
+        val instance = ClassName("", "TextField")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
-        paramCodeBlocks.add(CodeBlock.of(""""${info.text}""""))
+        paramCodeBlocks.add(CodeBlock.of("value = \"\""))
 
         val modifiers = ChainedCodeBlock(
             "modifier = Modifier.",
@@ -36,39 +37,22 @@ class TextViewNode(
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)
-        if (info.textColor.isEmpty().not()) {
-            paramCodeBlocks.add(CodeBlock.of("color = ${info.textColor.statement()}"))
-        }
-        if (info.fontSize > 0) {
-            paramCodeBlocks.add(CodeBlock.of("fontSize = ${info.fontSize}.sp"))
-        }
+        paramCodeBlocks.add(CodeBlock.of("onValueChange = {}"))
         return CodeBlock.builder()
             .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
-            .add("\n")
             .build()
     }
 
-    private fun composeAnnotation() = AnnotationSpec.builder(
-        ClassName("androidx.compose.runtime", "Composable")
-    ).build()
-
     override fun imports(): Iterable<ClassName> {
-        return listOf(
-            ClassName("androidx.compose.material", "Text"),
-            ClassName("androidx.compose.ui.unit", "sp")
-        ) + info.textColor.imports()
+        return emptyList()
     }
-
 
     data class Info(
         val id: String,
-        val width: LayoutWidth,
-        val height: LayoutHeight,
-        val text: String,
-        val textColor: ColorAttribute,
-        val fontSize: Int,
         val backgroundColor: ColorAttribute,
-        val weight: Float
+        val weight: Float,
+        val width: LayoutWidth,
+        val height: LayoutHeight
     )
 
 }

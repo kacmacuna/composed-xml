@@ -26,7 +26,7 @@ class ViewGroupIterator(
         val element = totalNodeList[currentIndex]
         currentIndex++
 
-        return ViewTags.fromString(element.nodeName).toLayoutElement(element, layoutElement.node()).node()
+        return ViewTags.fromString(element.nodeName).toLayoutElement(element).node()
     }
 
     private fun writeInList(nodeList: NodeList) {

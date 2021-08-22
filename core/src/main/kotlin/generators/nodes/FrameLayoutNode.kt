@@ -1,22 +1,18 @@
 package generators.nodes
 
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttribute
-import poet.addCodeBlockIf
-import poet.addCodeIf
+import generators.nodes.attributes.layout.LayoutHeight
+import generators.nodes.attributes.layout.LayoutWidth
+import poet.chained.ChainedCodeBlock
+import poet.chained.ChainedMemberCall
 
 class FrameLayoutNode(
     override val children: Iterable<ViewNode>,
     private val info: Info,
-    private val _parent: ViewNode?,
 ) : ViewNode {
 
-    override val parent: ParentViewNode?
-        get() = if (_parent != null) ParentViewNode(_parent) else null
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
@@ -26,21 +22,30 @@ class FrameLayoutNode(
     }
 
     override fun body(): CodeBlock {
+        val instance = ClassName("", "Box")
+        val paramCodeBlocks = mutableListOf<CodeBlock>()
+        val modifiers = ChainedCodeBlock(
+            "modifier = Modifier.",
+            ChainedMemberCall("background", info.backgroundColor.statement()),
+            ChainedMemberCall(info.width.statement(), "", true),
+            ChainedMemberCall(info.height.statement(), "", true)
+
+        ).codeBlock()
+        if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
+
+        if (info.alignment != Alignment.NoAlignment) {
+            paramCodeBlocks.add(CodeBlock.of("contentAlignment = Box.Alignment.${info.alignment.name}"))
+        }
+
         return CodeBlock.builder()
-            .add("Box")
-            .addCodeIf(info.hasAnyAttribute()) { " (" }
-            .addCodeIf(info.backgroundColorAttribute.isEmpty().not()) {
-                "modifier = Modifier.background(color = ${info.backgroundColorAttribute.statement()})"
-            }.addCodeIf(info.hasAnyModifierAndAlignment()) { ", " }
-            .addCodeIf(info.alignment != Alignment.NoAlignment) {
-                "contentAlignment = Box.Alignment.${info.alignment.name}"
-            }.addCodeIf(info.hasAnyAttribute()) { ")" }
-            .add(" {\n")
-            .addCodeBlockIf(children.iterator().hasNext()) { childrenToCodeBlock() }
-            .addCodeIf(parent?.hasAncestors()) { parent?.ancestors()?.joinToString { "\t" } }
-            .addCodeIf(children.iterator().hasNext().not()) { "\n" }
-            .add("}")
-            .addCodeIf(parent?.hasAncestors()) { "\n" }
+            .add("%T (%L)", instance, paramCodeBlocks.joinToCode())
+            .add(
+                CodeBlock.builder()
+                    .beginControlFlow(" {")
+                    .add(childrenToCodeBlock())
+                    .endControlFlow()
+                    .build()
+            )
             .build()
     }
 
@@ -55,8 +60,6 @@ class FrameLayoutNode(
     private fun childrenToCodeBlock(): CodeBlock {
         val codeBlock = CodeBlock.builder()
         children.forEach {
-            codeBlock.add("\t")
-            parent?.ancestors()?.joinToString { "\t" }?.let { it1 -> codeBlock.add(it1) }
             codeBlock.add(it.body())
         }
         return codeBlock.build()
@@ -65,14 +68,16 @@ class FrameLayoutNode(
     class Info(
         val id: String,
         val alignment: Alignment,
-        val backgroundColorAttribute: ColorAttribute
+        val backgroundColor: ColorAttribute,
+        val width: LayoutWidth,
+        val height: LayoutHeight
     ) {
         fun hasAnyAttribute(): Boolean {
-            return alignment != Alignment.NoAlignment || backgroundColorAttribute.isEmpty().not()
+            return alignment != Alignment.NoAlignment || backgroundColor.isEmpty().not()
         }
 
         fun hasAnyModifierAndAlignment(): Boolean {
-            return backgroundColorAttribute.isEmpty().not() && alignment != Alignment.NoAlignment
+            return backgroundColor.isEmpty().not() && alignment != Alignment.NoAlignment
         }
     }
 

@@ -29,7 +29,11 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column {\n\tText(\"Hello\")\n}"
+        val expectedBody = """
+            |Column () {
+            |  Text("Hello")
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -54,7 +58,11 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Row {\n\tText(\"Hello\")\n}"
+        val expectedBody = """
+            |Row () {
+            |  Text("Hello")
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -82,7 +90,12 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Row {\n\tText(\"Hello1\")\n\tText(\"Hello2\")\n}"
+        val expectedBody = """
+            |Row () {
+            |  Text("Hello1")
+            |  Text("Hello2")
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -115,7 +128,13 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column {\n\tRow {\n\t\tText(\"Hello\")\n\t}\n}"
+        val expectedBody = """
+            |Column () {
+            |  Row () {
+            |    Text("Hello")
+            |  }
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -150,7 +169,15 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column {\n\tRow {\n\t\tButton(onClick = {}) {\n\t\t\tText(\"Hello\")\n\t\t}\n\t}\n}"
+        val expectedBody = """
+            |Column () {
+            |  Row () {
+            |    Button(onClick = {}) {
+            |      Text("Hello")
+            |    }
+            |  }
+            |}
+        """.trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 

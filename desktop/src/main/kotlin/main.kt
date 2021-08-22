@@ -62,6 +62,7 @@ private fun RowScope.XmlEditor(
     xmlReader: XmlReaderImpl,
     composableValue: MutableState<String>
 ) {
+
     BasicTextField(
         value = xmlValue.value,
         modifier = Modifier.weight(1F).background(Color.Gray).fillMaxHeight(),

@@ -1,87 +1,67 @@
 package generators.nodes
 
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.colors.ColorAttribute
-import poet.addCodeBlockIf
-import poet.addCodeIf
+import generators.nodes.attributes.layout.LayoutHeight
+import generators.nodes.attributes.layout.LayoutWidth
+import poet.addComposeAnnotation
+import poet.chained.ChainedCodeBlock
+import poet.chained.ChainedMemberCall
 
 class LinearLayoutNode(
     private val info: Info,
     override val children: Iterable<ViewNode>,
-    private val _parent: ViewNode?,
 ) : ViewNode {
 
-    override val parent: ParentViewNode?
-        get() = if (_parent != null) ParentViewNode(_parent) else null
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
-            .addAnnotation(composeAnnotation())
+            .addComposeAnnotation()
             .addCode(body())
             .build()
     }
 
 
     override fun body(): CodeBlock {
+        val instance = ClassName(
+            "", when (info.orientation) {
+                Orientation.Horizontal -> "Row"
+                Orientation.Vertical -> "Column"
+            }
+        )
+        val paramCodeBlocks = mutableListOf<CodeBlock>()
+        val modifiers = ChainedCodeBlock(
+            "modifier = Modifier.",
+            ChainedMemberCall("background", info.backgroundColor.statement()),
+            ChainedMemberCall(info.width.statement(), "", true),
+            ChainedMemberCall(info.height.statement(), "", true)
+
+        ).codeBlock()
+        if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
+
+        if (info.arrangement != Arrangement.NoArrangement) {
+            paramCodeBlocks.add(CodeBlock.of(info.arrangement.statement(info.orientation)))
+        }
+
         return CodeBlock.builder()
-            .addCodeIf(info.orientation == Orientation.Vertical) { "Column" }
-            .addCodeIf(info.orientation == Orientation.Horizontal) { "Row" }
-            .addCodeIf(info.hasAnyAttribute()) { " (" }
-            .addCodeIf(info.hasSeveralAttributes()) {
-                "\n\t"
-            }
-            .addCodeIf(info.backgroundColor.isEmpty().not()) {
-                "modifier = Modifier.background(color = ${info.backgroundColor.statement()})"
-            }
-            .addCodeIf(info.backgroundColor.isEmpty().not() && info.arrangement != Arrangement.NoArrangement) {
-                ",\n\t"
-            }
-            .addCodeIf(info.arrangement != Arrangement.NoArrangement) {
-                info.arrangement.statement(info.orientation)
-            }
-            .addCodeIf(info.hasSeveralAttributes()) { "\n" }
-            .addCodeIf(info.hasAnyAttribute()) { ")" }
-            .add(" {")
-            .addCodeIf(children.iterator().hasNext()) { "\n" }
-            .addCodeBlockIf(children.iterator().hasNext()) { childrenToCodeBlock() }
-            .addCodeIf(hasAncestors()) { ancestors().joinToString { "\t" } }
-            .add("}")
-            .addCodeIf(hasAncestors()) { "\n" }
-            .build()
+            .add("%T (%L)", instance, paramCodeBlocks.joinToCode())
+            .add(
+                CodeBlock.builder()
+                    .beginControlFlow(" {")
+                    .add(childrenToCodeBlock())
+                    .endControlFlow()
+                    .build()
+            ).build()
     }
 
     private fun childrenToCodeBlock(): CodeBlock {
         val codeBlock = CodeBlock.builder()
         children.forEach {
-            codeBlock.add("\t")
-            codeBlock.add(ancestors().joinToString { "\t" })
             codeBlock.add(it.body())
         }
         return codeBlock.build()
     }
 
-    private fun hasAncestors() = ancestors().iterator().hasNext()
-
-    private fun composeAnnotation() = AnnotationSpec.builder(
-        ClassName("androidx.compose.runtime", "Composable")
-    ).build()
-
-
-    private fun ancestors(): Iterable<ViewNode> {
-        return ancestorsIterate(mutableListOf(), this)
-    }
-
-    private fun ancestorsIterate(mutableList: MutableList<ViewNode>, viewNode: ViewNode): Iterable<ViewNode> {
-        return if (viewNode.parent != null) {
-            mutableList.add(viewNode.parent!!)
-            ancestorsIterate(mutableList, viewNode.parent!!)
-        } else {
-            mutableList
-        }
-    }
 
     override fun imports(): Iterable<ClassName> {
         return (when (info.orientation) {
@@ -94,7 +74,10 @@ class LinearLayoutNode(
         val id: String,
         val orientation: Orientation,
         val arrangement: Arrangement,
-        val backgroundColor: ColorAttribute
+        val backgroundColor: ColorAttribute,
+        val width: LayoutWidth,
+        val height: LayoutHeight,
+        val weight: Float
     ) {
         fun hasAnyAttribute(): Boolean {
             return arrangement != Arrangement.NoArrangement || backgroundColor.isEmpty().not()

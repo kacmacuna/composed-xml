@@ -2,22 +2,17 @@ package readers.elements
 
 import generators.nodes.ButtonNode
 import generators.nodes.ViewNode
-import generators.nodes.attributes.layout.LayoutSizeAttributeParser
 import org.w3c.dom.Element
 
 class ButtonElement(
-    layoutElement: Element,
-    private val parentNode: ViewNode?
+    layoutElement: Element
 ) : LayoutElement<ButtonNode>(layoutElement) {
 
-    private val layoutSizeAttributeParser = LayoutSizeAttributeParser()
-
-    private val textViewElement = TextViewElement(layoutElement, parentNode)
+    private val textViewElement = TextViewElement(layoutElement)
 
     override fun node(): ButtonNode {
         return ButtonNode(
-            info = getInfo(),
-            _parent = parentNode
+            info = getInfo()
         )
     }
 

@@ -30,7 +30,7 @@ class XmlReaderImpl : XmlReader {
         }
         return ComposeGeneratorImpl(
             ViewTags.fromString(document.documentElement.nodeName).toLayoutElement(
-                document.documentElement, null
+                document.documentElement
             ).node(),
             fileName
         )

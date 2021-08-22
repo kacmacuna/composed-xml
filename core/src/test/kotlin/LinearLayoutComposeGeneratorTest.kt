@@ -24,7 +24,7 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column {}"
+        val expectedBody = "Column () {\n}"
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -45,7 +45,8 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row {}""".trimIndent()
+        val expectedBody = """Row () {
+            |}""".trimIndent().trimMargin()
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -67,7 +68,10 @@ class LinearLayoutComposeGeneratorTest {
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody =
-            """Row (modifier = Modifier.background(color = colorResource(R.color.green))) {}""".trimIndent()
+            """
+                |Row (modifier = Modifier.background(colorResource(R.color.green))) {
+                |}
+            """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -85,7 +89,10 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row (horizontalArrangement = Arrangement.End) {}""".trimIndent()
+        val expectedBody = """
+            |Row (horizontalArrangement = Arrangement.End) {
+            |}
+            """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -104,7 +111,8 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Column (verticalArrangement = Arrangement.End) {}""".trimIndent()
+        val expectedBody = """Column (verticalArrangement = Arrangement.End) {
+            |}""".trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -124,10 +132,10 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column (\n" +
-                "\tmodifier = Modifier.background(color = colorResource(R.color.green)),\n" +
-                "\tverticalArrangement = Arrangement.End\n" +
-                ") {}"
+        val expectedBody = """
+            |Column (modifier = Modifier.background(colorResource(R.color.green)), verticalArrangement = Arrangement.End) {
+            |}
+        """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }

@@ -21,7 +21,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box {\n\n}"
+        val expectedBody = "Box () {\n}"
 
         val importsAsStrings = file.toBuilder().imports.map { it.toString() }
 
@@ -42,7 +42,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (contentAlignment = Box.Alignment.TopStart) {\n\n}"
+        val expectedBody = "Box (contentAlignment = Box.Alignment.TopStart) {\n}"
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -60,7 +60,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (modifier = Modifier.background(color = colorResource(R.color.blue))) {\n\n}"
+        val expectedBody = "Box (modifier = Modifier.background(colorResource(R.color.blue))) {\n}"
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -79,7 +79,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (modifier = Modifier.background(color = colorResource(R.color.blue)), contentAlignment = Box.Alignment.Start) {\n\n}"
+        val expectedBody = "Box (modifier = Modifier.background(colorResource(R.color.blue)), contentAlignment = Box.Alignment.Start) {\n}"
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }

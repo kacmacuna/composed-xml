@@ -8,16 +8,15 @@ import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
 import poet.addCodeIf
+import poet.chained.ChainedCodeBlock
+import poet.chained.ChainedMemberCall
 
 class ButtonNode(
-    private val info: Info,
-    private val _parent: ViewNode?
+    private val info: Info
 ) : ViewNode {
 
-    private val textViewNode = TextViewNode(info.textInfo, this)
+    private val textViewNode = TextViewNode(info.textInfo)
 
-    override val parent: ParentViewNode?
-        get() = if (_parent != null) ParentViewNode(_parent) else null
 
     override val children: Iterable<ViewNode>
         get() = emptyList()
@@ -30,23 +29,18 @@ class ButtonNode(
     }
 
     override fun body(): CodeBlock {
+        val modifierCodeBlock = ChainedCodeBlock(
+            "modifier = Modifier.",
+            ChainedMemberCall(info.width.statement(), "", true),
+            ChainedMemberCall(info.height.statement(), "", true)
+        ).codeBlock()
         return CodeBlock.builder()
             .add("Button(onClick = {}")
-            .addCodeIf(info.width.statement().isNotEmpty() || info.height.statement().isNotEmpty()) {
-                ", modifier = Modifier.${info.width.statement()}.${info.height.statement()}"
-            }
-            .add(") {\n")
-            .addCodeIf(parent?.hasAncestors()) {
-                parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
-            }
-            .addCodeIf(info.textInfo.text.isNotEmpty()) { "\t" }
+            .addCodeIf(modifierCodeBlock.isNotEmpty()) { ", " }
+            .add(modifierCodeBlock)
+            .beginControlFlow(") {")
             .addCodeBlockIf(info.textInfo.text.isNotEmpty()) { textViewNode.body() }
-            .addCodeIf(parent?.hasAncestors()) {
-                parent?.ancestors()?.map { "\t" }?.joinToString(separator = "") { it }
-            }
-            .addCodeIf(info.textInfo.text.isEmpty()) { "\n" }
-            .add("}")
-            .addCodeIf(parent?.hasAncestors()) { "\n" }
+            .endControlFlow()
             .build()
     }
 

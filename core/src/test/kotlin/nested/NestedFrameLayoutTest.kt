@@ -29,7 +29,11 @@ class NestedFrameLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (contentAlignment = Box.Alignment.Center) {\n\tText(\"Hello\")\n}"
+        val expectedBody = """
+            |Box (contentAlignment = Box.Alignment.Center) {
+            |  Text("Hello")
+            |}
+        """.trimIndent().trimMargin()
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
     }
@@ -59,7 +63,14 @@ class NestedFrameLayoutTest {
         val file = composeGenerator.generate()
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (contentAlignment = Box.Alignment.BottomCenter) {\n\tBox (contentAlignment = Box.Alignment.CenterEnd) {\n\t\tButton(onClick = {}) {\n\t\t\tText(\"Hello\")\n\t\t}\n\t}\n}"
+        val expectedBody = """
+            |Box (contentAlignment = Box.Alignment.BottomCenter) {
+            |  Box (contentAlignment = Box.Alignment.CenterEnd) {
+            |    Button(onClick = {}) {
+            |      Text("Hello")
+            |    }
+            |  }
+            |}""".trimIndent().trimMargin()
 
 
         Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
