@@ -22,7 +22,7 @@ class FrameLayoutNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("", "Box")
+        val instance = ClassName("androidx.compose.foundation.layout", "Box")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
             "modifier = Modifier.",

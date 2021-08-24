@@ -22,7 +22,7 @@ class TextViewNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("", "Text")
+        val instance = ClassName("androidx.compose.material", "Text")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of(""""${info.text}""""))
 
@@ -54,7 +54,6 @@ class TextViewNode(
 
     override fun imports(): Iterable<ClassName> {
         return listOf(
-            ClassName("androidx.compose.material", "Text"),
             ClassName("androidx.compose.ui.unit", "sp")
         ) + info.textColor.imports()
     }

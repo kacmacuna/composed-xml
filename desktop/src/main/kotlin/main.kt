@@ -12,11 +12,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import editor.xmlCode
 import readers.XmlReaderImpl
+import theme.AppTheme
 
 fun main() = application {
     val xmlReader = XmlReaderImpl()
@@ -50,8 +54,8 @@ private fun EditorBody(xmlReader: XmlReaderImpl) {
         XmlEditor(xmlValue, xmlReader, composableValue)
         Spacer(Modifier.width(1.dp).fillMaxHeight())
         Text(
-            text = composableValue.value,
-            modifier = Modifier.weight(1F).fillMaxHeight(),
+            text = codeString(composableValue.value),
+            modifier = Modifier.weight(1F).background(AppTheme.colors.backgroundDark).fillMaxHeight(),
         )
     }
 }

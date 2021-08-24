@@ -23,7 +23,7 @@ class EditTextNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("", "TextField")
+        val instance = ClassName("androidx.compose.material", "TextField")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("value = \"\""))
 
