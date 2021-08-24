@@ -24,7 +24,7 @@ class LinearLayoutNode(
 
     override fun body(): CodeBlock {
         val instance = ClassName(
-            "", when (info.orientation) {
+            "androidx.compose.foundation.layout.", when (info.orientation) {
                 Orientation.Horizontal -> "Row"
                 Orientation.Vertical -> "Column"
             }
@@ -64,10 +64,7 @@ class LinearLayoutNode(
 
 
     override fun imports(): Iterable<ClassName> {
-        return (when (info.orientation) {
-            Orientation.Horizontal -> listOf(ClassName("androidx.compose.foundation.layout", "Row"))
-            Orientation.Vertical -> listOf(ClassName("androidx.compose.foundation.layout", "Column"))
-        } + children.map { it.imports() }.flatten()).toSet()
+        return children.map { it.imports() }.flatten().toSet()
     }
 
     class Info(

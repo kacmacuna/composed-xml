@@ -9,7 +9,7 @@ class XmlNameToComposableNameTest {
     @Test
     fun `activity_main,xml equals to ActivityMainComposable,kt`(){
         val result = xmlNameToComposableName.translate("activity_main.xml")
-        val expected = "ActivityMainComposable.kt"
+        val expected = "ActivityMainComposable"
 
         assertEquals(expected, result)
     }

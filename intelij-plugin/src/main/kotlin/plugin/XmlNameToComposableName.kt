@@ -10,7 +10,7 @@ class XmlNameToComposableName {
                 c
         }.toString().filter { c ->
             c != '_' && c != ',' && c != ']' && c != '[' && c != ' '
-        } + "Composable.kt"
+        } + "Composable"
     }
 
 }
