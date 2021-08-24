@@ -3,12 +3,14 @@ package plugin
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.squareup.kotlinpoet.FileSpec
 import kotlinx.coroutines.*
 import logic.ChooseFile
 import logic.RunWriteAction
 import logic.TranslatorIdeaEvent
 import readers.XmlReader
 import readers.XmlReaderImpl
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 
 class TranslatorTranslatorIdeaEvent(
@@ -63,7 +65,11 @@ class TranslatorTranslatorIdeaEvent(
             content = layoutFile.contentsToByteArray(),
             fileName = composedFileName
         ).generate()
-        fileSpec.writeTo(it.toNioPath())
+        if (it.isDirectory) {
+            fileSpec.writeTo(it.toNioPath())
+        } else {
+            throw TODO("This functionality is not yet implemented")
+        }
     }
 
 }

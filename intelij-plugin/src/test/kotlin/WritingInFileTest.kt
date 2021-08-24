@@ -1,26 +1,24 @@
 import com.intellij.openapi.vfs.VirtualFile
 import fakes.EmptyRunWriteAction
-import fakes.FakeChooseFile
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import logic.ChooseFile
-import org.hamcrest.CoreMatchers
-import org.junit.Assert.assertThat
-import org.junit.Ignore
+import org.junit.Before
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.rules.TemporaryFolder
 import plugin.TranslatorTranslatorIdeaEvent
 
-@Disabled
-class WritingInFolderTest {
+class WritingInFileTest {
 
     @Rule
     var tempFolder = TemporaryFolder()
+    val tempFile by lazy {
+        tempFolder.newFile("TestComposable.kt")
+    }
 
     private val chooseFile = object : ChooseFile {
         override suspend fun execute(
@@ -31,8 +29,8 @@ class WritingInFolderTest {
         ): VirtualFile {
             return if (chooseDirectories) {
                 mockk {
-                    every { isDirectory } returns true
-                    every { toNioPath() } returns tempFolder.root.toPath()
+                    every { isDirectory } returns false
+                    every { path } returns tempFile.path
                 }
             } else {
                 provideLayoutFile()
@@ -53,23 +51,33 @@ class WritingInFolderTest {
 
     }
 
-    @Test
-    @Disabled
-    fun `given translating LinearLayout, generated code should be pasted in testComposable`() = runBlocking {
+    @BeforeEach
+    fun setUp(){
         tempFolder.create()
+        tempFile.writeText("""
+            package TestComposable
+            
+            fun main() {
+            
+            }
+        """.trimIndent())
+    }
+
+    @Test
+    fun `given translating LinearLayout, generated code should be added in testComposable,kt`() = runBlocking {
+
         val translatorIdeaEvent = TranslatorTranslatorIdeaEvent(chooseFile, EmptyRunWriteAction)
 
         translatorIdeaEvent.execute()
 
-        val generatedComposableFile = tempFolder.root.listFiles()?.first()?.listFiles()?.first()
-        val composableText = generatedComposableFile?.readText() ?: ""
+        val composableText = tempFile?.readText() ?: ""
         Assertions.assertEquals(
             """
             package TestComposable
-
-            import androidx.compose.foundation.layout.Column
-            import androidx.compose.runtime.Composable
-            import kotlin.Unit
+            
+            fun main() {
+            
+            }
 
             @Composable
             public fun Title(): Unit {
@@ -80,6 +88,5 @@ class WritingInFolderTest {
         """.trimIndent(), composableText
         )
     }
-
 
 }
