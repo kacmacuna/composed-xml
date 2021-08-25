@@ -24,10 +24,11 @@ object AppTheme {
     )
 
     class XmlCode(
-        val viewType: SpanStyle = SpanStyle(Color(0xFFBBB529)),
-        val prefix: SpanStyle = SpanStyle(Color.Black),
-        val attributeValue: SpanStyle = SpanStyle(Color(0xFF6897BB)),
-        val simple: SpanStyle = SpanStyle(Color.White)
+        val viewType: SpanStyle = SpanStyle(Color(0xFFE7BE6A)),
+        val prefix: SpanStyle = SpanStyle(Color(0xFF7268A5)),
+        val attributeValue: SpanStyle = SpanStyle(Color(0xFF628658)),
+        val simple: SpanStyle = SpanStyle(Color(0xFFBABABA)),
+        val background: Color = Color(0xFF2B2B2B)
     )
 
     class Code(

@@ -33,6 +33,7 @@ fun codeString(str: String) = buildAnnotatedString {
         addStyle(AppTheme.code.value, strFormatted, "false")
         addStyle(AppTheme.code.value, strFormatted, Regex("[0-9]*"))
         addStyle(AppTheme.code.annotation, strFormatted, Regex("^@[a-zA-Z_]*"))
+        addStyle(AppTheme.code.annotation, strFormatted, "@Composable")
         addStyle(AppTheme.code.comment, strFormatted, Regex("^\\s*//.*"))
     }
 }

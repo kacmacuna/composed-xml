@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -49,7 +50,7 @@ private fun EditorHeader() {
 @Composable
 private fun EditorBody(xmlReader: XmlReaderImpl) {
     Row(Modifier.wrapContentWidth().fillMaxHeight(), Arrangement.spacedBy(5.dp)) {
-        val xmlValue = remember { mutableStateOf("") }
+        val xmlValue = remember { mutableStateOf(TextFieldValue("")) }
         val composableValue = remember { mutableStateOf("") }
         XmlEditor(xmlValue, xmlReader, composableValue)
         Spacer(Modifier.width(1.dp).fillMaxHeight())
@@ -62,21 +63,21 @@ private fun EditorBody(xmlReader: XmlReaderImpl) {
 
 @Composable
 private fun RowScope.XmlEditor(
-    xmlValue: MutableState<String>,
+    xmlValue: MutableState<TextFieldValue>,
     xmlReader: XmlReaderImpl,
     composableValue: MutableState<String>
 ) {
 
-    BasicTextField(
+    TextField(
         value = xmlValue.value,
-        modifier = Modifier.weight(1F).background(Color.Gray).fillMaxHeight(),
+        modifier = Modifier.weight(1F).background(AppTheme.xmlCode.background).fillMaxHeight(),
         textStyle = MaterialTheme.typography.body1,
         onValueChange = {
-            xmlValue.value = it
-            val generator = xmlReader.read(it, "temp")
+            xmlValue.value = TextFieldValue(xmlCode(it.text), it.selection, it.composition)
+            val generator = xmlReader.read(it.text, "temp")
             val stringBuilder = StringBuilder()
             generator.generate().writeTo(stringBuilder)
-            composableValue.value = if (xmlValue.value.isEmpty()) ""
+            composableValue.value = if (xmlValue.value.text.isEmpty()) ""
             else if (stringBuilder.toString().isNotEmpty())
                 stringBuilder.toString().replace("\t", "   ")
             else
