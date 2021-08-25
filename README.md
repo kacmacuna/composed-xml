@@ -6,4 +6,4 @@
 * [Supported View Types](docs/SUPPORTED_VIEW_TYPES.md)
 
 ## Examples
-![Desktop App Example](examples/desktop-app-example.png)
+![Desktop App Example](examples/updated-desktop-app-example.png)
