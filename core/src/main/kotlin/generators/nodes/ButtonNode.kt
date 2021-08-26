@@ -1,6 +1,7 @@
 package generators.nodes
 
 import com.squareup.kotlinpoet.*
+import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
@@ -17,6 +18,8 @@ class ButtonNode(
 
     override val children: Iterable<ViewNode>
         get() = emptyList()
+    override val id: String
+        get() = info.textInfo.id
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.textInfo.id)
@@ -33,7 +36,8 @@ class ButtonNode(
         val modifierCodeBlock = ChainedCodeBlock(
             "modifier = Modifier.",
             ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true)
+            ChainedMemberCall(info.height.statement(), "", true),
+            ChainedMemberCall(info.constraints.prefix, argument = info.constraints.codeBlock().toString())
         ).codeBlock()
         if (modifierCodeBlock.isNotEmpty()) paramCodeBlocks.add(modifierCodeBlock)
 
@@ -61,6 +65,7 @@ class ButtonNode(
     data class Info(
         val textInfo: TextViewNode.Info,
         val width: LayoutWidth,
-        val height: LayoutHeight
+        val height: LayoutHeight,
+        val constraints: Constraints
     )
 }

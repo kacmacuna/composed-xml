@@ -12,6 +12,8 @@ class FrameLayoutNode(
     override val children: Iterable<ViewNode>,
     private val info: Info,
 ) : ViewNode {
+    override val id: String
+        get() = info.id
 
 
     override fun function(): FunSpec {

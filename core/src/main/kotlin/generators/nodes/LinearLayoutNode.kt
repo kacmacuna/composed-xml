@@ -12,6 +12,8 @@ class LinearLayoutNode(
     private val info: Info,
     override val children: Iterable<ViewNode>,
 ) : ViewNode {
+    override val id: String
+        get() = info.id
 
 
     override fun function(): FunSpec {

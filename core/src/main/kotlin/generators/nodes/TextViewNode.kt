@@ -13,6 +13,8 @@ class TextViewNode(
 
 
     override val children: Iterable<ViewNode> = emptyList()
+    override val id: String
+        get() = info.id
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)

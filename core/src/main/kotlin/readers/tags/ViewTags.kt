@@ -9,7 +9,7 @@ enum class ViewTags(val value: String) {
     LINEAR_LAYOUT("LinearLayout"),
     BUTTON("Button"),
     FRAME_LAYOUT("FrameLayout"),
-    CONSTRAINT_LAYOUT("ConstraintLayout"),
+    CONSTRAINT_LAYOUT("androidx.constraintlayout.widget.ConstraintLayout"),
     EDIT_TEXT("EditText"),;
 
     fun toLayoutElement(

@@ -14,6 +14,8 @@ class EditTextNode(
 
     override val children: Iterable<ViewNode>
         get() = emptyList()
+    override val id: String
+        get() = info.id
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)

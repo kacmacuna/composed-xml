@@ -16,6 +16,8 @@ class ConstraintLayoutNode(
     override val children: Iterable<ViewNode>,
     private val info: Info
 ) : ViewNode {
+    override val id: String
+        get() = info.id
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
@@ -25,7 +27,7 @@ class ConstraintLayoutNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.constraintlayout.compose", "ConstraintLayout")
+        val instance = ClassName("androidx.compose.foundation.layout", "ConstraintLayout")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
             "modifier = Modifier.",
@@ -41,11 +43,22 @@ class ConstraintLayoutNode(
             .add(
                 CodeBlock.builder()
                     .beginControlFlow(" {")
+                    .add(createConstraintRefs())
                     .add(childrenToCodeBlock())
                     .endControlFlow()
                     .build()
             )
             .build()
+    }
+
+    private fun createConstraintRefs(): CodeBlock {
+        val codeBlock = CodeBlock.builder()
+        children.forEach {
+            codeBlock.addStatement(
+                "val ${it.id.replaceFirstChar { first -> first.lowercase() }}Ref = ConstrainedLayoutReference(Any())"
+            )
+        }
+        return codeBlock.build()
     }
 
     override fun imports(): Iterable<ClassName> {
