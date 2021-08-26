@@ -1,5 +1,6 @@
 package nested
 
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import readers.XmlReader
 import readers.XmlReaderImpl
+import kotlin.math.exp
 
 class NestedLinearLayoutTest {
 
@@ -27,18 +29,14 @@ class NestedLinearLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Column () {
-            |  Text("Hello")
+            |androidx.compose.foundation.layout.Column () {
+            |  androidx.compose.material.Text("Hello")
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
+        file.assertThatAnyFunctionEquals(expectedBody)
     }
 
     @Test
@@ -56,18 +54,15 @@ class NestedLinearLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
-            |Row () {
-            |  Text("Hello")
+            |androidx.compose.foundation.layout.Row () {
+            |  androidx.compose.material.Text("Hello")
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+        file.assertThatAnyFunctionEquals(expectedBody)
     }
 
     @Test
@@ -88,19 +83,15 @@ class NestedLinearLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Row () {
-            |  Text("Hello1")
-            |  Text("Hello2")
+            |androidx.compose.foundation.layout.Row () {
+            |  androidx.compose.material.Text("Hello1")
+            |  androidx.compose.material.Text("Hello2")
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+        file.assertThatAnyFunctionEquals(expectedBody)
     }
 
     @Test
@@ -126,22 +117,16 @@ class NestedLinearLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Column () {
-            |  Row () {
-            |    Text("Hello")
+            |androidx.compose.foundation.layout.Column () {
+            |  androidx.compose.foundation.layout.Row () {
+            |    androidx.compose.material.Text("Hello")
             |  }
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -167,24 +152,18 @@ class NestedLinearLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Column () {
-            |  Row () {
-            |    Button(onClick = {}) {
-            |      Text("Hello")
+            |androidx.compose.foundation.layout.Column () {
+            |  androidx.compose.foundation.layout.Row () {
+            |    androidx.compose.material.Button(onClick = {}) {
+            |      androidx.compose.material.Text("Hello")
             |    }
             |  }
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
+        file assertThatAnyFunctionEquals expectedBody
     }
 
 }

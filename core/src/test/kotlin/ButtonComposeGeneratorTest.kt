@@ -1,3 +1,4 @@
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -19,17 +20,13 @@ class ButtonComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Button(onClick = {}) {
+            |androidx.compose.material.Button(onClick = {}) {
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.material.Button"))
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -44,24 +41,14 @@ class ButtonComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Button(onClick = {}) {
+            |androidx.compose.material.Button(onClick = {}) {
             |  androidx.compose.material.Text("Hello", color = colorResource(R.color.blue))
             |}
+            |
         """.trimIndent().trimMargin()
 
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(
-            importsAsStrings, CoreMatchers.hasItems(
-                "androidx.compose.material.Button",
-                "androidx.compose.ui.res.colorResource",
-                "androidx.compose.material.Text",
-                )
-        )
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -76,15 +63,15 @@ class ButtonComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody ="""
-            |Button(onClick = {}) {
+            |androidx.compose.material.Button(onClick = {}) {
             |  androidx.compose.material.Text("Hello", fontSize = 20.sp)
             |}
+            |
         """.trimIndent().trimMargin()
 
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -99,14 +86,13 @@ class ButtonComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
+            |androidx.compose.material.Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
             |}
+            |
         """.trimIndent().trimMargin()
 
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -121,14 +107,13 @@ class ButtonComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
-
         val expectedBody = """
-            |Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
+            |androidx.compose.material.Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
             |}
+            |
         """.trimIndent().trimMargin()
 
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file assertThatAnyFunctionEquals expectedBody
     }
 
 }

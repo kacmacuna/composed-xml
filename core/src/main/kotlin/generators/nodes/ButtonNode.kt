@@ -1,9 +1,6 @@
 package generators.nodes
 
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
@@ -29,16 +26,20 @@ class ButtonNode(
     }
 
     override fun body(): CodeBlock {
+        val instance = ClassName("androidx.compose.material", "Button")
+        val paramCodeBlocks = mutableListOf<CodeBlock>()
+        paramCodeBlocks.add(CodeBlock.of("onClick = {}"))
+
         val modifierCodeBlock = ChainedCodeBlock(
             "modifier = Modifier.",
             ChainedMemberCall(info.width.statement(), "", true),
             ChainedMemberCall(info.height.statement(), "", true)
         ).codeBlock()
+        if (modifierCodeBlock.isNotEmpty()) paramCodeBlocks.add(modifierCodeBlock)
+
         return CodeBlock.builder()
-            .add("Button(onClick = {}")
-            .addCodeIf(modifierCodeBlock.isNotEmpty()) { ", " }
-            .add(modifierCodeBlock)
-            .beginControlFlow(") {")
+            .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
+            .beginControlFlow(" {")
             .addCodeBlockIf(info.textInfo.text.isNotEmpty()) { textViewNode.body() }
             .endControlFlow()
             .build()

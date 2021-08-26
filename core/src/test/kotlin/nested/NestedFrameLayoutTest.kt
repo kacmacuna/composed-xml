@@ -1,5 +1,6 @@
 package nested
 
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import readers.XmlReader
 import readers.XmlReaderImpl
+import kotlin.math.exp
 
 class NestedFrameLayoutTest {
 
@@ -27,15 +29,15 @@ class NestedFrameLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
             |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.Center) {
             |  androidx.compose.material.Text("Hello")
             |}
+            |
         """.trimIndent().trimMargin()
 
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file assertThatAnyFunctionEquals expectedBody
     }
 
     @Test
@@ -61,19 +63,19 @@ class NestedFrameLayoutTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
             |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.BottomCenter) {
             |  androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.CenterEnd) {
-            |    Button(onClick = {}) {
+            |    androidx.compose.material.Button(onClick = {}) {
             |      androidx.compose.material.Text("Hello")
             |    }
             |  }
-            |}""".trimIndent().trimMargin()
+            |}
+            |""".trimIndent().trimMargin()
 
 
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file assertThatAnyFunctionEquals expectedBody
     }
 
 }
