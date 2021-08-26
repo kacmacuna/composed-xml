@@ -9,6 +9,7 @@ enum class ViewTags(val value: String) {
     LINEAR_LAYOUT("LinearLayout"),
     BUTTON("Button"),
     FRAME_LAYOUT("FrameLayout"),
+    CONSTRAINT_LAYOUT("ConstraintLayout"),
     EDIT_TEXT("EditText"),;
 
     fun toLayoutElement(
@@ -20,6 +21,7 @@ enum class ViewTags(val value: String) {
             BUTTON -> ButtonElement(element)
             FRAME_LAYOUT -> FrameLayoutElement(element)
             EDIT_TEXT -> EditTextElement(element)
+            CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element)
         }
     }
 

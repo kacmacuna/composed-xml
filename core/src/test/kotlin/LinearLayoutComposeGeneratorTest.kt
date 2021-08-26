@@ -1,3 +1,4 @@
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -22,14 +23,8 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Column () {\n}"
-
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Column"))
+        file.assertThatAnyFunctionEquals("androidx.compose.foundation.layout.Column () {\n}\n")
     }
 
     @Test
@@ -43,15 +38,11 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Row () {
-            |}""".trimIndent().trimMargin()
-
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Row"))
+        file.assertThatAnyFunctionEquals("""
+            |androidx.compose.foundation.layout.Row () {
+            |}
+            |""".trimIndent().trimMargin())
     }
 
     @Test
@@ -65,15 +56,14 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody =
+        file.assertThatAnyFunctionEquals(
             """
-                |Row (modifier = Modifier.background(colorResource(R.color.green))) {
+                |androidx.compose.foundation.layout.Row (modifier = Modifier.background(colorResource(R.color.green))) {
                 |}
+                |
             """.trimIndent().trimMargin()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        )
     }
 
     @Test
@@ -87,14 +77,14 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            |Row (horizontalArrangement = Arrangement.End) {
+        file.assertThatAnyFunctionEquals(
+            """
+            |androidx.compose.foundation.layout.Row (horizontalArrangement = Arrangement.End) {
             |}
+            |
             """.trimIndent().trimMargin()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        )
     }
 
     @Test
@@ -109,12 +99,14 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """Column (verticalArrangement = Arrangement.End) {
-            |}""".trimIndent().trimMargin()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            |androidx.compose.foundation.layout.Column (verticalArrangement = Arrangement.End) {
+            |}
+            |
+            """.trimIndent().trimMargin()
+        )
     }
 
     @Test
@@ -130,14 +122,14 @@ class LinearLayoutComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            |Column (modifier = Modifier.background(colorResource(R.color.green)), verticalArrangement = Arrangement.End) {
+        file.assertThatAnyFunctionEquals(
+            """
+            |androidx.compose.foundation.layout.Column (modifier = Modifier.background(colorResource(R.color.green)), verticalArrangement = Arrangement.End) {
             |}
+            |
         """.trimIndent().trimMargin()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        )
     }
 
 }

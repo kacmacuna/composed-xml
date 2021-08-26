@@ -48,7 +48,7 @@ class ButtonComposeGeneratorTest {
 
         val expectedBody = """
             |Button(onClick = {}) {
-            |  Text("Hello", color = colorResource(R.color.blue))
+            |  androidx.compose.material.Text("Hello", color = colorResource(R.color.blue))
             |}
         """.trimIndent().trimMargin()
 
@@ -80,7 +80,7 @@ class ButtonComposeGeneratorTest {
 
         val expectedBody ="""
             |Button(onClick = {}) {
-            |  Text("Hello", fontSize = 20.sp)
+            |  androidx.compose.material.Text("Hello", fontSize = 20.sp)
             |}
         """.trimIndent().trimMargin()
 

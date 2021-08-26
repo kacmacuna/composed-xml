@@ -17,7 +17,7 @@ class EditTextGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals("""TextField(value = "", onValueChange = {})""")
+        file.assertThatAnyFunctionEquals("""androidx.compose.material.TextField(value = "", onValueChange = {})""")
     }
 
     @Test
@@ -33,7 +33,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})
+            |androidx.compose.material.TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }
@@ -52,7 +52,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})
+            |androidx.compose.material.TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }
@@ -71,7 +71,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |TextField(value = "", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})
+            |androidx.compose.material.TextField(value = "", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }

@@ -30,8 +30,8 @@ class NestedFrameLayoutTest {
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
-            |Box (contentAlignment = Box.Alignment.Center) {
-            |  Text("Hello")
+            |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.Center) {
+            |  androidx.compose.material.Text("Hello")
             |}
         """.trimIndent().trimMargin()
 
@@ -64,10 +64,10 @@ class NestedFrameLayoutTest {
         val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
         val expectedBody = """
-            |Box (contentAlignment = Box.Alignment.BottomCenter) {
-            |  Box (contentAlignment = Box.Alignment.CenterEnd) {
+            |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.BottomCenter) {
+            |  androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.CenterEnd) {
             |    Button(onClick = {}) {
-            |      Text("Hello")
+            |      androidx.compose.material.Text("Hello")
             |    }
             |  }
             |}""".trimIndent().trimMargin()

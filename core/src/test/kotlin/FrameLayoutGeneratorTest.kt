@@ -1,3 +1,4 @@
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -19,14 +20,10 @@ class FrameLayoutGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box () {\n}"
-
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
-        MatcherAssert.assertThat(importsAsStrings, CoreMatchers.hasItems("androidx.compose.foundation.layout.Box"))
+        file.assertThatAnyFunctionEquals(
+            "androidx.compose.foundation.layout.Box () {\n}\n"
+        )
     }
 
     @Test
@@ -40,11 +37,10 @@ class FrameLayoutGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (contentAlignment = Box.Alignment.TopStart) {\n}"
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            "androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.TopStart) {\n}\n"
+        )
     }
 
     @Test
@@ -58,11 +54,10 @@ class FrameLayoutGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (modifier = Modifier.background(colorResource(R.color.blue))) {\n}"
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            "androidx.compose.foundation.layout.Box (modifier = Modifier.background(colorResource(R.color.blue))) {\n}\n"
+        )
     }
 
     @Test
@@ -77,11 +72,11 @@ class FrameLayoutGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = "Box (modifier = Modifier.background(colorResource(R.color.blue)), contentAlignment = Box.Alignment.Start) {\n}"
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            "androidx.compose.foundation.layout.Box (modifier = Modifier.background(colorResource(R.color.blue))," +
+                    " contentAlignment = Box.Alignment.Start) {\n}\n"
+        )
     }
 
 }

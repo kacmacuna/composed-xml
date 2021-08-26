@@ -1,3 +1,4 @@
+import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
@@ -64,17 +65,17 @@ class TextViewComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            Text("Hello", color = colorResource(R.color.blue), fontSize = 20.sp)
-        """.trimIndent()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            androidx.compose.material.Text("Hello", color = colorResource(R.color.blue), fontSize = 20.sp)
+            
+            """.trimIndent()
+        )
     }
 
     @Test
-    fun `given text color defines textColor and textSize generated function should import Text and colorResource`() {
+    fun `given text color defines textColor and textSize generated function should import sp and colorResource`() {
         val composeGenerator = xmlReader.read(
             content = """ 
             <TextView
@@ -91,7 +92,6 @@ class TextViewComposeGeneratorTest {
 
         assertThat(
             importsAsStrings, CoreMatchers.hasItems(
-                "androidx.compose.material.Text",
                 "androidx.compose.ui.res.colorResource",
                 "androidx.compose.ui.unit.sp"
             )
@@ -112,13 +112,13 @@ class TextViewComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            Text("Hello", color = Color(android.graphics.Color.parseColor("#FF11FF")), fontSize = 20.sp)
-        """.trimIndent()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            androidx.compose.material.Text("Hello", color = Color(android.graphics.Color.parseColor("#FF11FF")), fontSize = 20.sp)
+            
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -132,13 +132,13 @@ class TextViewComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            Text("Hello")
-        """.trimIndent()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            androidx.compose.material.Text("Hello")
+            
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -154,13 +154,13 @@ class TextViewComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            Text("Hello", modifier = Modifier.wrapContentWidth().fillMaxHeight())
-        """.trimIndent()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            androidx.compose.material.Text("Hello", modifier = Modifier.wrapContentWidth().fillMaxHeight())
+            
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -176,13 +176,13 @@ class TextViewComposeGeneratorTest {
         )
 
         val file = composeGenerator.generate()
-        val titleFunction = file.members.first { it is FunSpec } as FunSpec
 
-        val expectedBody = """
-            Text("Hello", modifier = Modifier.width(20.dp).height(30.dp))
-        """.trimIndent()
-
-        Assertions.assertEquals(expectedBody, titleFunction.body.toString().trim())
+        file.assertThatAnyFunctionEquals(
+            """
+            androidx.compose.material.Text("Hello", modifier = Modifier.width(20.dp).height(30.dp))
+            
+            """.trimIndent()
+        )
     }
 
 }
