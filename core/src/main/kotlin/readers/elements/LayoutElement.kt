@@ -3,6 +3,7 @@ package readers.elements
 import generators.nodes.ViewNode
 import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttributeParser
+import generators.nodes.attributes.constraints.ConstraintsParser
 import generators.nodes.attributes.layout.LayoutSizeAttributeParser
 import org.w3c.dom.Element
 import java.util.*
@@ -13,8 +14,9 @@ abstract class LayoutElement<out T : ViewNode>(
 
     protected val colorAttributeParser = ColorAttributeParser()
     protected val layoutSizeAttributeParser = LayoutSizeAttributeParser()
+    protected val constraintsParser = ConstraintsParser()
 
-    protected fun getViewIdNameTag(): String {
+    fun getViewIdNameTag(): String {
         return originalElement.getAttribute("android:id").removePrefix("@+id/")
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }

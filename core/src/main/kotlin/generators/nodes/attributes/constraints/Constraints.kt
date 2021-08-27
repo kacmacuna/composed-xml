@@ -12,22 +12,23 @@ class Constraints(
     val prefix = "constrainAs"
 
     fun codeBlock(): CodeBlock {
-        val detailsToUI = detailsToUI().ifEmpty { return CodeBlock.of("") }
-        return CodeBlock.of(
-            """
-                |${constraintId}Ref, {
-                |   $detailsToUI
-                |}
-            """.trimIndent().trimMargin()
-        )
+        val detailsToUI = detailsToUI().also {
+            if (it.isEmpty()) return CodeBlock.of("")
+        }
+        return CodeBlock.builder()
+            .beginControlFlow("${constraintId}Ref, {")
+            .add(detailsToUI)
+            .endControlFlow()
+            .build()
     }
 
-    private fun detailsToUI(): String {
-        return details.mapIndexed { pos, it ->
+    private fun detailsToUI(): CodeBlock {
+        val codeBlock = CodeBlock.builder()
+        details.forEach {
             val code = "${it.constraintDirection.value}.linkTo(${it.constraintToId}.${it.constraintToDirection.value})"
-            val newLineOrEmpty = if (pos != details.size - 1) "\n" else ""
-            code + newLineOrEmpty
-        }.joinToString("") { it }
+            codeBlock.addStatement(code)
+        }
+        return codeBlock.build()
     }
 
     companion object {

@@ -2,6 +2,7 @@ package generators.nodes
 
 import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
@@ -33,7 +34,8 @@ class TextViewNode(
             ChainedMemberCall("background", info.backgroundColor.statement()),
             ChainedMemberCall("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
             ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true)
+            ChainedMemberCall(info.height.statement(), "", true),
+            ChainedMemberCall(info.constraints.prefix, info.constraints.codeBlock().toString())
 
         ).codeBlock()
         if (modifiers.isNotEmpty())
@@ -69,7 +71,8 @@ class TextViewNode(
         val textColor: ColorAttribute,
         val fontSize: Int,
         val backgroundColor: ColorAttribute,
-        val weight: Float
+        val weight: Float,
+        val constraints: Constraints
     )
 
 }

@@ -22,7 +22,8 @@ class TextViewElement(
         width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
         height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
         backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),
-        weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat()
+        weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat(),
+        constraints = constraintsParser.parse(this)
     )
 
     private fun getFontSize(): Int {
