@@ -1,37 +1,37 @@
 package poet.chained
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.joinToCode
 
 class ChainedCodeBlock(
     private val prefixNamedParam: String,
-    private val prefix: MemberName,
+    private val prefix: ClassName,
     vararg val attributes: ChainedMemberName
 ) {
 
     fun codeBlock(): CodeBlock {
         return CodeBlock.of(
-            "$prefixNamedParam = %M.${
-                chained().ifEmpty {
-                    return CodeBlock.of("")
-                }
-            }",
-            prefix
+            "$prefixNamedParam = %T.%L",
+            prefix, chained().ifEmpty { return CodeBlock.of("") }.joinToCode(separator = ".")
         )
     }
 
-    private fun chained(): String {
-        val filtered = attributes.filter { it.prefixContainsArguments || it.argument.isNotEmpty() }.filter { it.prefix.isNotEmpty() }
+    private fun chained(): List<CodeBlock> {
+        val filtered = attributes.filter { it.containsArguments.not() || it.argument.isNotEmpty() }
+            .filter { it.prefix.simpleName.isNotEmpty() }
         return filtered.map {
-            val suffix = if (it.prefix != filtered.last().prefix) "." else ""
-            val chainedBuilder = StringBuilder()
+            val chainedBuilder = CodeBlock.builder()
 
-            chainedBuilder.append(it.prefix)
-            if (it.prefixContainsArguments.not()) chainedBuilder.append("(${it.argument})")
-            if (suffix.isNotEmpty()) chainedBuilder.append(suffix)
+            if (it.containsArguments) {
+                chainedBuilder.add("%M(${it.argument})", it.prefix)
+            } else {
+                chainedBuilder.add("%M()", it.prefix)
 
-            chainedBuilder.toString()
-        }.joinToString("") { it }
+            }
+
+            chainedBuilder.build()
+        }
     }
 
 

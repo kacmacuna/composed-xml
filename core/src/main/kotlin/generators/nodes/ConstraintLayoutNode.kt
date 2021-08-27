@@ -30,10 +30,21 @@ class ConstraintLayoutNode(
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
-            ChainedMemberName("background", info.backgroundColor.statement()),
-            ChainedMemberName(info.width.statement(), "", true),
-            ChainedMemberName(info.height.statement(), "", true)
+            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            ChainedMemberName(
+                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                info.backgroundColor.argument()
+            ),
+            ChainedMemberName(
+                prefix = info.width.prefix(),
+                info.width.argument(),
+                containsArguments = true
+            ),
+            ChainedMemberName(
+                prefix = info.height.prefix(),
+                info.height.argument(),
+                containsArguments = true
+            )
 
         ).codeBlock()
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)

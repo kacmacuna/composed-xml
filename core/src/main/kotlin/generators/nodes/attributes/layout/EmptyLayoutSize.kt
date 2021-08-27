@@ -1,13 +1,20 @@
 package generators.nodes.attributes.layout
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.MemberName
 
-object EmptyLayoutSize : LayoutWidth, LayoutHeight {
-    override fun statement(): String {
-        return ""
+object EmptyLayoutSize : LayoutSize {
+
+    override fun prefix(): MemberName {
+        return GenerationEngine.get().memberName("", "")
     }
 
-    override fun imports(): Iterable<ClassName> {
-        return emptyList()
+    override fun argument(): CodeBlock {
+        return CodeBlock.of("")
+    }
+
+    override fun containsArguments(): Boolean {
+        return false
     }
 }

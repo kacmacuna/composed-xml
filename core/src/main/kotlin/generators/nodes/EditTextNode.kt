@@ -4,8 +4,8 @@ import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
-import poet.chained.ChainedCodeBlock
 import poet.addComposeAnnotation
+import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
 
 class EditTextNode(
@@ -31,12 +31,25 @@ class EditTextNode(
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
-            ChainedMemberName("background", info.backgroundColor.statement()),
-            ChainedMemberName("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
-            ChainedMemberName(info.width.statement(), "", true),
-            ChainedMemberName(info.height.statement(), "", true)
-
+            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            ChainedMemberName(
+                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                info.backgroundColor.argument()
+            ),
+            ChainedMemberName(
+                prefix = MemberName("", "weight"),
+                CodeBlock.of(if (info.weight >= 0F) "${info.weight}F" else "")
+            ),
+            ChainedMemberName(
+                prefix = info.width.prefix(),
+                info.width.argument(),
+                containsArguments = info.width.containsArguments()
+            ),
+            ChainedMemberName(
+                prefix = info.height.prefix(),
+                info.height.argument(),
+                containsArguments = info.height.containsArguments()
+            ),
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)

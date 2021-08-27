@@ -1,17 +1,23 @@
 package generators.nodes.attributes.layout
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.MemberName
 
 class LayoutSizeMatchParent private constructor(
     private val statement: String,
-) : LayoutWidth, LayoutHeight{
+) : LayoutSize {
 
-    override fun statement(): String {
-        return "$statement()"
+    override fun prefix(): MemberName {
+        return GenerationEngine.get().memberName("androidx.compose.foundation.layout", statement)
     }
 
-    override fun imports(): Iterable<ClassName> {
-        return emptyList()
+    override fun argument(): CodeBlock {
+        return CodeBlock.of("")
+    }
+
+    override fun containsArguments(): Boolean {
+        return false
     }
 
     @Suppress("FunctionName")

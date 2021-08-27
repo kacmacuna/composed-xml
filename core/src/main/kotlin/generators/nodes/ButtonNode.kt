@@ -34,10 +34,21 @@ class ButtonNode(
 
         val modifierCodeBlock = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
-            ChainedMemberName(info.width.statement(), "", true),
-            ChainedMemberName(info.height.statement(), "", true),
-            ChainedMemberName(info.constraints.prefix, argument = info.constraints.codeBlock().toString())
+            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            ChainedMemberName(
+                prefix = info.width.prefix(),
+                info.width.argument(),
+                containsArguments = info.width.containsArguments()
+            ),
+            ChainedMemberName(
+                prefix = info.height.prefix(),
+                info.height.argument(),
+                containsArguments = info.height.containsArguments()
+            ),
+            ChainedMemberName(
+                info.constraints.memberNamePrefix,
+                info.constraints.codeBlock()
+            )
         ).codeBlock()
         if (modifierCodeBlock.isNotEmpty()) paramCodeBlocks.add(modifierCodeBlock)
 

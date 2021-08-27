@@ -31,12 +31,29 @@ class TextViewNode(
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
-            ChainedMemberName("background", info.backgroundColor.statement()),
-            ChainedMemberName("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
-            ChainedMemberName(info.width.statement(), "", true),
-            ChainedMemberName(info.height.statement(), "", true),
-            ChainedMemberName(info.constraints.prefix, info.constraints.codeBlock().toString())
+            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            ChainedMemberName(
+                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                info.backgroundColor.argument()
+            ),
+            ChainedMemberName(
+                prefix = MemberName("", "weight"),
+                CodeBlock.of(if (info.weight >= 0F) "${info.weight}F" else "")
+            ),
+            ChainedMemberName(
+                prefix = info.width.prefix(),
+                info.width.argument(),
+                containsArguments = info.width.containsArguments()
+            ),
+            ChainedMemberName(
+                prefix = info.height.prefix(),
+                info.height.argument(),
+                containsArguments = info.height.containsArguments()
+            ),
+            ChainedMemberName(
+                info.constraints.memberNamePrefix,
+                info.constraints.codeBlock()
+            )
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)

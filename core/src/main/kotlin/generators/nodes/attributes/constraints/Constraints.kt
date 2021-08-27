@@ -11,6 +11,7 @@ class Constraints(
 ) {
 
     val prefix = "constrainAs"
+    val memberNamePrefix = GenerationEngine.get().memberName("", "constrainAs")
 
     fun codeBlock(): CodeBlock {
         val detailsToUI = detailsToUI().also {
