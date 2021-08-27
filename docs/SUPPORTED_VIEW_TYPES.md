@@ -1,6 +1,12 @@
 ## Supported View Types
 
+* ConstraintLayout
+  * android:id
+  * android:layout_width
+  * android:layout_height
+  * android:background
 * LinearLayout
+  * android:id
   * android:orientation
   * android:gravity
   * android:background
@@ -8,6 +14,7 @@
   * android:layout_height
   * android:weight
 * FrameLayout
+  * android:id
   * android:orientation
   * android:gravity
   * android:background
@@ -17,6 +24,7 @@
   * android:id
   * android:layout_width
   * android:layout_height
+  * app:layout_constraint*
   * android:text
   * android:textColor
   * android:textSize
@@ -28,6 +36,7 @@
   * android:id
   * android:layout_width
   * android:layout_height
+  * app:layout_constraint*
   * android:text
   * android:textColor
   * android:textSize
