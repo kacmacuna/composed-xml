@@ -2,6 +2,8 @@
 
 ## Inspired by - [Recompose](https://github.com/pocmo/recompose)
 
+composed-xml is a tool for parsing Android layouts into Jetpack Compose code. It can work as both Desktop app or Intelij/Android Studio plugin.
+
 ## Docs
 * [Supported View Types](docs/SUPPORTED_VIEW_TYPES.md)
 * [Desktop App Screens](desktop/screens)
