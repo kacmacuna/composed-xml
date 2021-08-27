@@ -1,19 +1,22 @@
 package poet.chained
 
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.MemberName
 
 class ChainedCodeBlock(
-    private val prefix: String,
-    vararg val attributes: ChainedMemberCall
+    private val prefixNamedParam: String,
+    private val prefix: MemberName,
+    vararg val attributes: ChainedMemberName
 ) {
 
     fun codeBlock(): CodeBlock {
         return CodeBlock.of(
-            "$prefix${
+            "$prefixNamedParam = %M.${
                 chained().ifEmpty {
                     return CodeBlock.of("")
                 }
-            }"
+            }",
+            prefix
         )
     }
 
@@ -29,10 +32,6 @@ class ChainedCodeBlock(
 
             chainedBuilder.toString()
         }.joinToString("") { it }
-    }
-
-    companion object {
-        const val IGNORE_EMPTY = "IGNORE_EMPTY"
     }
 
 

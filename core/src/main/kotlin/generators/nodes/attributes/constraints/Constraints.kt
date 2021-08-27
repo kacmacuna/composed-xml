@@ -1,6 +1,7 @@
 package generators.nodes.attributes.constraints
 
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.MemberName
 import java.security.PrivateKey
 import java.security.PrivilegedActionException
 
@@ -33,6 +34,7 @@ class Constraints(
 
     companion object {
         const val PARENT = "parent"
+        val EMPTY = Constraints("", emptyList())
     }
 
 }

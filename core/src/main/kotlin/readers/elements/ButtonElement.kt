@@ -19,7 +19,7 @@ class ButtonElement(
     }
 
     private fun getInfo(): ButtonNode.Info {
-        val textViewInfo = textViewElement.getInfo()
+        val textViewInfo = textViewElement.getInfo().copy(constraints = Constraints.EMPTY)
         return ButtonNode.Info(
             textInfo = textViewInfo,
             width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),

@@ -6,7 +6,7 @@ import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
-import poet.chained.ChainedMemberCall
+import poet.chained.ChainedMemberName
 
 class TextViewNode(
     private val info: Info
@@ -25,18 +25,18 @@ class TextViewNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.compose.material", "Text")
+        val instance = GenerationEngine.get().className("androidx.compose.material", "Text")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of(""""${info.text}""""))
 
         val modifiers = ChainedCodeBlock(
-            "modifier = Modifier.",
-            ChainedMemberCall("background", info.backgroundColor.statement()),
-            ChainedMemberCall("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
-            ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true),
-            ChainedMemberCall(info.constraints.prefix, info.constraints.codeBlock().toString())
-
+            prefixNamedParam = "modifier",
+            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
+            ChainedMemberName("background", info.backgroundColor.statement()),
+            ChainedMemberName("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
+            ChainedMemberName(info.width.statement(), "", true),
+            ChainedMemberName(info.height.statement(), "", true),
+            ChainedMemberName(info.constraints.prefix, info.constraints.codeBlock().toString())
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)

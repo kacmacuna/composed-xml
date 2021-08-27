@@ -1,4 +1,5 @@
 import assertions.assertThatAnyFunctionEquals
+import data.XmlReaderTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import readers.XmlReader
@@ -6,7 +7,7 @@ import readers.XmlReaderImpl
 
 class EditTextGeneratorTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given nothing is defined, function should be TextField(_, onValueChange = {})`() {
@@ -17,7 +18,7 @@ class EditTextGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals("""androidx.compose.material.TextField(value = "", onValueChange = {})""")
+        file.assertThatAnyFunctionEquals("""TextField(value = "", onValueChange = {})""")
     }
 
     @Test
@@ -33,7 +34,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.material.TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})
+            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }
@@ -52,7 +53,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.material.TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})
+            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }
@@ -71,7 +72,7 @@ class EditTextGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.material.TextField(value = "", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})
+            |TextField(value = "", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})
             """.trimMargin().trimIndent()
         )
     }

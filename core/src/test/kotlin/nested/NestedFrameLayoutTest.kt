@@ -2,6 +2,7 @@ package nested
 
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
@@ -12,7 +13,7 @@ import kotlin.math.exp
 
 class NestedFrameLayoutTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given Text is nested inside of centered FrameLayout, generated function should be Box(Center) {Text(Hello)}`(){
@@ -31,8 +32,8 @@ class NestedFrameLayoutTest {
         val file = composeGenerator.generate()
 
         val expectedBody = """
-            |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.Center) {
-            |  androidx.compose.material.Text("Hello")
+            |Box (contentAlignment = Box.Alignment.Center) {
+            |  Text("Hello")
             |}
             |
         """.trimIndent().trimMargin()
@@ -65,10 +66,10 @@ class NestedFrameLayoutTest {
         val file = composeGenerator.generate()
 
         val expectedBody = """
-            |androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.BottomCenter) {
-            |  androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.CenterEnd) {
-            |    androidx.compose.material.Button(onClick = {}) {
-            |      androidx.compose.material.Text("Hello")
+            |Box (contentAlignment = Box.Alignment.BottomCenter) {
+            |  Box (contentAlignment = Box.Alignment.CenterEnd) {
+            |    Button(onClick = {}) {
+            |      Text("Hello")
             |    }
             |  }
             |}

@@ -4,13 +4,12 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.joinToCode
-import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
-import poet.chained.ChainedMemberCall
+import poet.chained.ChainedMemberName
 
 class ConstraintLayoutNode(
     override val children: Iterable<ViewNode>,
@@ -27,13 +26,14 @@ class ConstraintLayoutNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.compose.foundation.layout", "ConstraintLayout")
+        val instance = GenerationEngine.get().className("androidx.compose.foundation.layout", "ConstraintLayout")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
-            "modifier = Modifier.",
-            ChainedMemberCall("background", info.backgroundColor.statement()),
-            ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true)
+            prefixNamedParam = "modifier",
+            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
+            ChainedMemberName("background", info.backgroundColor.statement()),
+            ChainedMemberName(info.width.statement(), "", true),
+            ChainedMemberName(info.height.statement(), "", true)
 
         ).codeBlock()
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
@@ -55,7 +55,8 @@ class ConstraintLayoutNode(
         val codeBlock = CodeBlock.builder()
         children.forEach {
             codeBlock.addStatement(
-                "val ${it.id.replaceFirstChar { first -> first.lowercase() }}Ref = ConstrainedLayoutReference(Any())"
+                "val ${it.id.replaceFirstChar { first -> first.lowercase() }}Ref = %M(Any())",
+                GenerationEngine.get().memberName("androidx.compose.foundation.layout", "ConstrainedLayoutReference")
             )
         }
         return codeBlock.build()

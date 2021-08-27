@@ -1,5 +1,6 @@
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
@@ -9,7 +10,7 @@ import readers.XmlReaderImpl
 
 class FrameLayoutGeneratorTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given FrameLayout, function should be Box{}`() {
@@ -22,7 +23,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals(
-            "androidx.compose.foundation.layout.Box () {\n}\n"
+            "Box () {\n}\n"
         )
     }
 
@@ -39,7 +40,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals(
-            "androidx.compose.foundation.layout.Box (contentAlignment = Box.Alignment.TopStart) {\n}\n"
+            "Box (contentAlignment = Box.Alignment.TopStart) {\n}\n"
         )
     }
 
@@ -56,7 +57,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals(
-            "androidx.compose.foundation.layout.Box (modifier = Modifier.background(colorResource(R.color.blue))) {\n}\n"
+            "Box (modifier = Modifier.background(colorResource(R.color.blue))) {\n}\n"
         )
     }
 
@@ -74,7 +75,7 @@ class FrameLayoutGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals(
-            "androidx.compose.foundation.layout.Box (modifier = Modifier.background(colorResource(R.color.blue))," +
+            "Box (modifier = Modifier.background(colorResource(R.color.blue))," +
                     " contentAlignment = Box.Alignment.Start) {\n}\n"
         )
     }

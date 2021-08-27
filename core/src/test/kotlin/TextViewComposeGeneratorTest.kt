@@ -1,5 +1,6 @@
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions
@@ -9,7 +10,7 @@ import readers.XmlReaderImpl
 
 class TextViewComposeGeneratorTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given layout name is test generated file's name should be test`() {
@@ -68,7 +69,7 @@ class TextViewComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            androidx.compose.material.Text("Hello", color = colorResource(R.color.blue), fontSize = 20.sp)
+            Text("Hello", color = colorResource(R.color.blue), fontSize = 20.sp)
             
             """.trimIndent()
         )
@@ -115,7 +116,7 @@ class TextViewComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            androidx.compose.material.Text("Hello", color = Color(android.graphics.Color.parseColor("#FF11FF")), fontSize = 20.sp)
+            Text("Hello", color = Color(android.graphics.Color.parseColor("#FF11FF")), fontSize = 20.sp)
             
             """.trimIndent()
         )
@@ -135,7 +136,7 @@ class TextViewComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            androidx.compose.material.Text("Hello")
+            Text("Hello")
             
             """.trimIndent()
         )
@@ -157,7 +158,7 @@ class TextViewComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            androidx.compose.material.Text("Hello", modifier = Modifier.wrapContentWidth().fillMaxHeight())
+            Text("Hello", modifier = Modifier.wrapContentWidth().fillMaxHeight())
             
             """.trimIndent()
         )
@@ -179,7 +180,7 @@ class TextViewComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            androidx.compose.material.Text("Hello", modifier = Modifier.width(20.dp).height(30.dp))
+            Text("Hello", modifier = Modifier.width(20.dp).height(30.dp))
             
             """.trimIndent()
         )

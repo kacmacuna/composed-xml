@@ -2,6 +2,7 @@ package nested
 
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
@@ -12,7 +13,7 @@ import kotlin.math.exp
 
 class NestedLinearLayoutTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given Text is nested inside of vLinearLayout, generated function should be Column {Text(Hello)}`() {
@@ -30,8 +31,8 @@ class NestedLinearLayoutTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.foundation.layout.Column () {
-            |  androidx.compose.material.Text("Hello")
+            |Column () {
+            |  Text("Hello")
             |}
             |
         """.trimIndent().trimMargin()
@@ -56,8 +57,8 @@ class NestedLinearLayoutTest {
         val file = composeGenerator.generate()
 
         val expectedBody = """
-            |androidx.compose.foundation.layout.Row () {
-            |  androidx.compose.material.Text("Hello")
+            |Row () {
+            |  Text("Hello")
             |}
             |
         """.trimIndent().trimMargin()
@@ -84,9 +85,9 @@ class NestedLinearLayoutTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.foundation.layout.Row () {
-            |  androidx.compose.material.Text("Hello1")
-            |  androidx.compose.material.Text("Hello2")
+            |Row () {
+            |  Text("Hello1")
+            |  Text("Hello2")
             |}
             |
         """.trimIndent().trimMargin()
@@ -118,9 +119,9 @@ class NestedLinearLayoutTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.foundation.layout.Column () {
-            |  androidx.compose.foundation.layout.Row () {
-            |    androidx.compose.material.Text("Hello")
+            |Column () {
+            |  Row () {
+            |    Text("Hello")
             |  }
             |}
             |
@@ -153,10 +154,10 @@ class NestedLinearLayoutTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.foundation.layout.Column () {
-            |  androidx.compose.foundation.layout.Row () {
-            |    androidx.compose.material.Button(onClick = {}) {
-            |      androidx.compose.material.Text("Hello")
+            |Column () {
+            |  Row () {
+            |    Button(onClick = {}) {
+            |      Text("Hello")
             |    }
             |  }
             |}

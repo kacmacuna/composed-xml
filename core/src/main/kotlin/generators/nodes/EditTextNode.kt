@@ -6,7 +6,7 @@ import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
 import poet.addComposeAnnotation
-import poet.chained.ChainedMemberCall
+import poet.chained.ChainedMemberName
 
 class EditTextNode(
     private val info: Info
@@ -25,16 +25,17 @@ class EditTextNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.compose.material", "TextField")
+        val instance = GenerationEngine.get().className("androidx.compose.material", "TextField")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("value = \"\""))
 
         val modifiers = ChainedCodeBlock(
-            "modifier = Modifier.",
-            ChainedMemberCall("background", info.backgroundColor.statement()),
-            ChainedMemberCall("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
-            ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true)
+            prefixNamedParam = "modifier",
+            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
+            ChainedMemberName("background", info.backgroundColor.statement()),
+            ChainedMemberName("weight", if (info.weight >= 0F) "${info.weight}F" else ""),
+            ChainedMemberName(info.width.statement(), "", true),
+            ChainedMemberName(info.height.statement(), "", true)
 
         ).codeBlock()
         if (modifiers.isNotEmpty())

@@ -1,5 +1,6 @@
 package generators
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import generators.nodes.ViewNode
 

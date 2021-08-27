@@ -1,5 +1,6 @@
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
@@ -9,7 +10,7 @@ import readers.XmlReaderImpl
 
 class ButtonComposeGeneratorTest {
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given layouts root view is Button, function should be Button{}`() {
@@ -21,7 +22,7 @@ class ButtonComposeGeneratorTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.material.Button(onClick = {}) {
+            |Button(onClick = {}) {
             |}
             |
         """.trimIndent().trimMargin()
@@ -42,8 +43,8 @@ class ButtonComposeGeneratorTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.material.Button(onClick = {}) {
-            |  androidx.compose.material.Text("Hello", color = colorResource(R.color.blue))
+            |Button(onClick = {}) {
+            |  Text("Hello", color = colorResource(R.color.blue))
             |}
             |
         """.trimIndent().trimMargin()
@@ -65,8 +66,8 @@ class ButtonComposeGeneratorTest {
         val file = composeGenerator.generate()
 
         val expectedBody ="""
-            |androidx.compose.material.Button(onClick = {}) {
-            |  androidx.compose.material.Text("Hello", fontSize = 20.sp)
+            |Button(onClick = {}) {
+            |  Text("Hello", fontSize = 20.sp)
             |}
             |
         """.trimIndent().trimMargin()
@@ -87,7 +88,7 @@ class ButtonComposeGeneratorTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.material.Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
+            |Button(onClick = {}, modifier = Modifier.wrapContentWidth().fillMaxHeight()) {
             |}
             |
         """.trimIndent().trimMargin()
@@ -108,7 +109,7 @@ class ButtonComposeGeneratorTest {
 
         val file = composeGenerator.generate()
         val expectedBody = """
-            |androidx.compose.material.Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
+            |Button(onClick = {}, modifier = Modifier.width(20.dp).height(30.dp)) {
             |}
             |
         """.trimIndent().trimMargin()

@@ -1,5 +1,6 @@
 import assertions.assertThatAnyFunctionEquals
 import com.squareup.kotlinpoet.FunSpec
+import data.XmlReaderTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
@@ -10,7 +11,7 @@ import readers.XmlReaderImpl
 class LinearLayoutComposeGeneratorTest {
 
 
-    private val xmlReader: XmlReader = XmlReaderImpl()
+    private val xmlReader: XmlReader = XmlReaderTest()
 
     @Test
     fun `given layout is vertical, function should include Column`() {
@@ -24,7 +25,7 @@ class LinearLayoutComposeGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals("androidx.compose.foundation.layout.Column () {\n}\n")
+        file.assertThatAnyFunctionEquals("Column () {\n}\n")
     }
 
     @Test
@@ -40,7 +41,7 @@ class LinearLayoutComposeGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals("""
-            |androidx.compose.foundation.layout.Row () {
+            |Row () {
             |}
             |""".trimIndent().trimMargin())
     }
@@ -59,7 +60,7 @@ class LinearLayoutComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-                |androidx.compose.foundation.layout.Row (modifier = Modifier.background(colorResource(R.color.green))) {
+                |Row (modifier = Modifier.background(colorResource(R.color.green))) {
                 |}
                 |
             """.trimIndent().trimMargin()
@@ -80,7 +81,7 @@ class LinearLayoutComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.Row (horizontalArrangement = Arrangement.End) {
+            |Row (horizontalArrangement = Arrangement.End) {
             |}
             |
             """.trimIndent().trimMargin()
@@ -102,7 +103,7 @@ class LinearLayoutComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.Column (verticalArrangement = Arrangement.End) {
+            |Column (verticalArrangement = Arrangement.End) {
             |}
             |
             """.trimIndent().trimMargin()
@@ -125,7 +126,7 @@ class LinearLayoutComposeGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.Column (modifier = Modifier.background(colorResource(R.color.green)), verticalArrangement = Arrangement.End) {
+            |Column (modifier = Modifier.background(colorResource(R.color.green)), verticalArrangement = Arrangement.End) {
             |}
             |
         """.trimIndent().trimMargin()

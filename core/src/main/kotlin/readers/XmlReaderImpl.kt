@@ -15,7 +15,14 @@ import java.security.PrivilegedActionException
 import javax.xml.parsers.DocumentBuilderFactory
 
 
-class XmlReaderImpl : XmlReader {
+class XmlReaderImpl(
+    includeFullMemberNames: Boolean = true
+) : XmlReader {
+
+    init {
+        GenerationEngine.createInstance(includeFullMemberNames)
+    }
+
     override fun read(content: ByteArray, fileName: String): ComposeGenerator {
         return read(String(content), fileName)
     }

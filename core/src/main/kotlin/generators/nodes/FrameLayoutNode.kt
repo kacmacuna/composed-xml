@@ -6,7 +6,7 @@ import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
-import poet.chained.ChainedMemberCall
+import poet.chained.ChainedMemberName
 
 class FrameLayoutNode(
     override val children: Iterable<ViewNode>,
@@ -24,13 +24,14 @@ class FrameLayoutNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.compose.foundation.layout", "Box")
+        val instance = GenerationEngine.get().className("androidx.compose.foundation.layout", "Box")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
-            "modifier = Modifier.",
-            ChainedMemberCall("background", info.backgroundColor.statement()),
-            ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true)
+            prefixNamedParam = "modifier",
+            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
+            ChainedMemberName("background", info.backgroundColor.statement()),
+            ChainedMemberName(info.width.statement(), "", true),
+            ChainedMemberName(info.height.statement(), "", true)
 
         ).codeBlock()
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)

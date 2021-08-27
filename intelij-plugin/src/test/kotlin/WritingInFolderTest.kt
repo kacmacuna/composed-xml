@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.rules.TemporaryFolder
 import plugin.TranslatorTranslatorIdeaEvent
 
-@Disabled
 class WritingInFolderTest {
 
     @Rule
@@ -54,7 +53,6 @@ class WritingInFolderTest {
     }
 
     @Test
-    @Disabled
     fun `given translating LinearLayout, generated code should be pasted in testComposable`() = runBlocking {
         tempFolder.create()
         val translatorIdeaEvent = TranslatorTranslatorIdeaEvent(chooseFile, EmptyRunWriteAction)

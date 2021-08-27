@@ -5,9 +5,8 @@ import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
-import poet.addCodeIf
 import poet.chained.ChainedCodeBlock
-import poet.chained.ChainedMemberCall
+import poet.chained.ChainedMemberName
 
 class ButtonNode(
     private val info: Info
@@ -29,15 +28,16 @@ class ButtonNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = ClassName("androidx.compose.material", "Button")
+        val instance = GenerationEngine.get().className("androidx.compose.material", "Button")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("onClick = {}"))
 
         val modifierCodeBlock = ChainedCodeBlock(
-            "modifier = Modifier.",
-            ChainedMemberCall(info.width.statement(), "", true),
-            ChainedMemberCall(info.height.statement(), "", true),
-            ChainedMemberCall(info.constraints.prefix, argument = info.constraints.codeBlock().toString())
+            prefixNamedParam = "modifier",
+            prefix = GenerationEngine.get().memberName("androidx.compose.ui", "Modifier"),
+            ChainedMemberName(info.width.statement(), "", true),
+            ChainedMemberName(info.height.statement(), "", true),
+            ChainedMemberName(info.constraints.prefix, argument = info.constraints.codeBlock().toString())
         ).codeBlock()
         if (modifierCodeBlock.isNotEmpty()) paramCodeBlocks.add(modifierCodeBlock)
 

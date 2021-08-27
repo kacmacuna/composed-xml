@@ -1,10 +1,11 @@
 import assertions.assertThatAnyFunctionEquals
+import data.XmlReaderTest
 import org.junit.jupiter.api.Test
 import readers.XmlReaderImpl
 
 class ConstraintLayoutGeneratorTest {
 
-    private val xmlReader = XmlReaderImpl()
+    private val xmlReader = XmlReaderTest()
 
     @Test
     fun `given no attributes are defined, function should be ConstraintLayout () {}`() {
@@ -17,7 +18,7 @@ class ConstraintLayoutGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.ConstraintLayout () {
+            |ConstraintLayout () {
             |}
             |
             """.trimMargin()
@@ -45,9 +46,9 @@ class ConstraintLayoutGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.ConstraintLayout () {
+            |ConstraintLayout () {
             |  val btnRef = ConstrainedLayoutReference(Any())
-            |  androidx.compose.material.Button(onClick = {}, modifier = Modifier.constrainAs(btnRef, {
+            |  Button(onClick = {}, modifier = Modifier.constrainAs(btnRef, {
             |    top.linkTo(parent.top)
             |  }
             |  )) {
@@ -81,9 +82,9 @@ class ConstraintLayoutGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.ConstraintLayout () {
+            |ConstraintLayout () {
             |  val txtRef = ConstrainedLayoutReference(Any())
-            |  androidx.compose.material.Text("", modifier = Modifier.constrainAs(txtRef, {
+            |  Text("", modifier = Modifier.constrainAs(txtRef, {
             |    bottom.linkTo(parent.bottom)
             |    end.linkTo(parent.end)
             |  }
@@ -120,14 +121,14 @@ class ConstraintLayoutGeneratorTest {
 
         file.assertThatAnyFunctionEquals(
             """
-            |androidx.compose.foundation.layout.ConstraintLayout () {
+            |ConstraintLayout () {
             |  val textRef = ConstrainedLayoutReference(Any())
             |  val btnRef = ConstrainedLayoutReference(Any())
-            |  androidx.compose.material.Text("", modifier = Modifier.constrainAs(textRef, {
+            |  Text("", modifier = Modifier.constrainAs(textRef, {
             |    start.linkTo(parent.start)
             |  }
             |  ))
-            |  androidx.compose.material.Button(onClick = {}, modifier = Modifier.constrainAs(btnRef, {
+            |  Button(onClick = {}, modifier = Modifier.constrainAs(btnRef, {
             |    start.linkTo(textRef.end)
             |  }
             |  )) {
