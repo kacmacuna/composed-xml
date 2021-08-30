@@ -3,6 +3,7 @@ package generators.nodes
 import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedCodeBlock
@@ -68,6 +69,22 @@ class FrameLayoutNode(
         return listOf(ClassName("androidx.compose.foundation.layout", "Box")) + children.map { it.imports() }.flatten()
     }
 
+    override fun copyWithInfo(
+        vararg chainedMemberNames: ChainedMemberName,
+        layoutWidth: LayoutWidth,
+        layoutHeight: LayoutHeight
+    ): ViewNode {
+        return FrameLayoutNode(
+            info = info.copy(
+                chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
+                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
+                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+            ),
+            imports = imports,
+            children = children
+        )
+    }
+
     private fun composeAnnotation() = AnnotationSpec.builder(
         ClassName("androidx.compose.runtime", "Composable")
     ).build()
@@ -80,12 +97,13 @@ class FrameLayoutNode(
         return codeBlock.build()
     }
 
-    class Info(
-        val id: String,
+    data class Info(
+        override val id: String,
         val alignment: Alignment,
         val backgroundColor: ColorAttribute,
-        val width: LayoutWidth,
-        val height: LayoutHeight
-    )
+        override val width: LayoutWidth,
+        override val height: LayoutHeight,
+        override val chainedMemberNames: List<ChainedMemberName> = listOf()
+    ) : ViewInfo
 
 }

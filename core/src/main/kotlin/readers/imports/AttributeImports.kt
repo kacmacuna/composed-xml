@@ -16,6 +16,9 @@ interface AttributeImports {
     val background: MemberName
     val modifier: ClassName
     val colorResource: MemberName
+    val verticalScroll: MemberName
+    val horizontalScroll: MemberName
+    val rememberScrollState: MemberName
 
     class Impl(
         private val includePackageName: Boolean
@@ -42,6 +45,12 @@ interface AttributeImports {
             get() = Imports.className(includePackageName, "androidx.compose.ui", "Modifier")
         override val colorResource: MemberName
             get() = Imports.memberName(includePackageName, "androidx.compose.ui.res", "colorResource")
+        override val verticalScroll: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.foundation", "verticalScroll")
+        override val horizontalScroll: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.foundation", "horizontalScroll")
+        override val rememberScrollState: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.foundation", "rememberScrollState")
 
     }
 }

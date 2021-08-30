@@ -2,6 +2,7 @@ package generators.nodes
 
 import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.constraints.Constraints
+import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
@@ -74,11 +75,30 @@ class ButtonNode(
         ) + info.textInfo.textColor.imports()
     }
 
+    override fun copyWithInfo(
+        vararg chainedMemberNames: ChainedMemberName,
+        layoutWidth: LayoutWidth,
+        layoutHeight: LayoutHeight
+    ): ViewNode {
+        return ButtonNode(
+            info = info.copy(
+                chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
+                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
+                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+            ),
+            imports = imports
+        )
+    }
+
 
     data class Info(
         val textInfo: TextViewNode.Info,
-        val width: LayoutWidth,
-        val height: LayoutHeight,
-        val constraints: Constraints
-    )
+        val constraints: Constraints,
+        override val height: LayoutHeight,
+        override val width: LayoutWidth,
+        override val chainedMemberNames: List<ChainedMemberName> = listOf(),
+    ) : ViewInfo {
+        override val id: String
+            get() = textInfo.id
+    }
 }

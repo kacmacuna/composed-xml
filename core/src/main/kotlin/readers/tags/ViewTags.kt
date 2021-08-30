@@ -11,7 +11,9 @@ enum class ViewTags(val value: String) {
     BUTTON("Button"),
     FRAME_LAYOUT("FrameLayout"),
     CONSTRAINT_LAYOUT("androidx.constraintlayout.widget.ConstraintLayout"),
-    EDIT_TEXT("EditText"), ;
+    EDIT_TEXT("EditText"),
+    SCROLL_VIEW("ScrollView"),
+    HORIZONTAL_SCROLL_VIEW("HorizontalScrollView");
 
     fun toLayoutElement(
         element: Element,
@@ -24,6 +26,7 @@ enum class ViewTags(val value: String) {
             FRAME_LAYOUT -> FrameLayoutElement(element, imports)
             EDIT_TEXT -> EditTextElement(element, imports)
             CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element, imports)
+            SCROLL_VIEW, HORIZONTAL_SCROLL_VIEW -> ScrollViewElement(element, imports, this == HORIZONTAL_SCROLL_VIEW)
         }
     }
 

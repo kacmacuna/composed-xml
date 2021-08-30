@@ -20,7 +20,6 @@ class LinearLayoutElement(
                 backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),
                 width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
                 height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
-                weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat()
             ),
             children = children(),
             imports = imports

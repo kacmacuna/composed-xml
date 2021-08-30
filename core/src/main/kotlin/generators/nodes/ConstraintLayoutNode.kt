@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.joinToCode
 import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
@@ -40,13 +41,14 @@ class ConstraintLayoutNode(
             ChainedMemberName(
                 prefix = info.width.prefix(),
                 info.width.argument(),
-                containsArguments = true
+                containsArguments = info.width.containsArguments()
             ),
             ChainedMemberName(
                 prefix = info.height.prefix(),
                 info.height.argument(),
-                containsArguments = true
-            )
+                containsArguments = info.height.containsArguments()
+            ),
+            *info.chainedMemberNames.toTypedArray()
 
         ).codeBlock()
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
@@ -79,6 +81,22 @@ class ConstraintLayoutNode(
         return children.map { it.imports() }.flatten()
     }
 
+    override fun copyWithInfo(
+        vararg chainedMemberNames: ChainedMemberName,
+        layoutWidth: LayoutWidth,
+        layoutHeight: LayoutHeight
+    ): ViewNode {
+        return ConstraintLayoutNode(
+            children = children,
+            info = info.copy(
+                chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
+                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
+                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+            ),
+            imports = imports
+        )
+    }
+
     private fun childrenToCodeBlock(): CodeBlock {
         val codeBlock = CodeBlock.builder()
         children.forEach {
@@ -88,10 +106,11 @@ class ConstraintLayoutNode(
     }
 
     data class Info(
-        val id: String,
         val backgroundColor: ColorAttribute,
-        val width: LayoutWidth,
-        val height: LayoutHeight
-    )
+        override val id: String,
+        override val width: LayoutWidth,
+        override val height: LayoutHeight,
+        override val chainedMemberNames: List<ChainedMemberName> = listOf(),
+    ) : ViewInfo
 
 }

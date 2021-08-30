@@ -4,6 +4,7 @@ import generators.nodes.ButtonNode
 import generators.nodes.attributes.constraints.ConstraintDetails
 import generators.nodes.attributes.constraints.ConstraintDirection
 import generators.nodes.attributes.constraints.Constraints
+import generators.nodes.attributes.layout.EmptyLayoutSize
 import org.w3c.dom.Element
 import readers.imports.Imports
 
@@ -21,7 +22,11 @@ class ButtonElement(
     }
 
     private fun getInfo(): ButtonNode.Info {
-        val textViewInfo = textViewElement.getInfo().copy(constraints = Constraints.EMPTY)
+        val textViewInfo = textViewElement.getInfo().copy(
+            constraints = Constraints.EMPTY,
+            width = EmptyLayoutSize,
+            height = EmptyLayoutSize
+        )
         return ButtonNode.Info(
             textInfo = textViewInfo,
             width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),

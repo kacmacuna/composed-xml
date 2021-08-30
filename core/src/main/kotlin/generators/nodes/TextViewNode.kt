@@ -1,6 +1,5 @@
 package generators.nodes
 
-import ServiceLocator
 import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.constraints.Constraints
@@ -79,17 +78,29 @@ class TextViewNode(
         ) + info.textColor.imports()
     }
 
+    override fun copyWithInfo(
+        vararg chainedMemberNames: ChainedMemberName,
+        layoutWidth: LayoutWidth,
+        layoutHeight: LayoutHeight
+    ): ViewNode {
+        return TextViewNode(
+            info = info.copy(chainedMemberNames = info.chainedMemberNames + chainedMemberNames),
+            imports = imports
+        )
+    }
+
 
     data class Info(
-        val id: String,
-        val width: LayoutWidth,
-        val height: LayoutHeight,
+        override val id: String,
+        override val width: LayoutWidth,
+        override val height: LayoutHeight,
+        override val chainedMemberNames: List<ChainedMemberName> = listOf(),
         val text: String,
         val textColor: ColorAttribute,
         val fontSize: Int,
         val backgroundColor: ColorAttribute,
         val weight: Float,
         val constraints: Constraints
-    )
+    ) : ViewInfo
 
 }
