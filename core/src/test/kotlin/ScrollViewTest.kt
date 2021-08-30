@@ -77,15 +77,12 @@ class ScrollViewTest {
                             android:id="@+id/btn1"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:gravity="top"
                             android:text="Hello" />
 
                         <TextView
                             android:id="@+id/btn2"
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:gravity="bottom"
-                            android:text="Hello" />
+                            android:layout_height="150dp" />
                     </FrameLayout>
                 </HorizontalScrollView>
             """.trimIndent(),
@@ -93,19 +90,48 @@ class ScrollViewTest {
         )
 
         generator.generate() assertThatAnyFunctionEquals """
-            |Box (modifier = Modifier.fillMaxWidth().height(200.dp).verticalScroll(rememberScrollState())) {
-            |  Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(150.dp).constrainAs(btn1Ref, {
-            |    top.linkTo(parent.top)
-            |  }
-            |  )) {
-            |    Text("Hello")
-            |  }
-            |  Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(150.dp).constrainAs(btn2Ref, {
-            |    top.linkTo(btn1Ref.bottom)
-            |  }
-            |  )) {
-            |    Text("Hello")
-            |  }
+            |Box (modifier = Modifier.fillMaxWidth().height(200.dp).horizontalScroll(rememberScrollState())) {
+            |  Text("", modifier = Modifier.fillMaxWidth().height(150.dp))
+            |  TextField(value = "", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
+            |}
+            |
+        """.trimIndent().trimMargin()
+
+    }
+
+    @Test
+    fun `given H ScrollView's child  is Linearlayout, function should be Row(Modifier,horizontalScroll)`() {
+        val generator = xmlReader.read(
+            """
+                <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <EditText
+                            android:id="@+id/btn1"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:text="Hello" />
+
+                        <TextView
+                            android:id="@+id/btn2"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+            """.trimIndent(),
+            "temp"
+        )
+
+        generator.generate() assertThatAnyFunctionEquals """
+            |Row (modifier = Modifier.fillMaxWidth().height(200.dp).horizontalScroll(rememberScrollState())) {
+            |  Text("", modifier = Modifier.fillMaxWidth().height(150.dp))
+            |  TextField(value = "", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
             |}
             |
         """.trimIndent().trimMargin()

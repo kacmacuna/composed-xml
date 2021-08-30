@@ -50,3 +50,5 @@
   * android:layout_height
   * android:weight
   * android:background
+* ScrollView
+* HorizontalScrollView

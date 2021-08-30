@@ -59,6 +59,7 @@ class EditTextNode(
         paramCodeBlocks.add(CodeBlock.of("onValueChange = {}"))
         return CodeBlock.builder()
             .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
+            .add("\n")
             .build()
     }
 

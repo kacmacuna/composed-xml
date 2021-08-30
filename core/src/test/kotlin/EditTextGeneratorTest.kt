@@ -18,7 +18,7 @@ class EditTextGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals("""TextField(value = "", onValueChange = {})""")
+        file.assertThatAnyFunctionEquals("TextField(value = \"\", onValueChange = {})\n")
     }
 
     @Test
@@ -32,11 +32,7 @@ class EditTextGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals(
-            """
-            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})
-            """.trimMargin().trimIndent()
-        )
+        file assertThatAnyFunctionEquals "TextField(value = \"\", modifier = Modifier.background(colorResource(R.color.green)), onValueChange = {})\n"
     }
 
     @Test
@@ -51,11 +47,7 @@ class EditTextGeneratorTest {
 
         val file = composeGenerator.generate()
 
-        file.assertThatAnyFunctionEquals(
-            """
-            |TextField(value = "", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})
-            """.trimMargin().trimIndent()
-        )
+        file assertThatAnyFunctionEquals "TextField(value = \"\", modifier = Modifier.background(colorResource(R.color.green)).weight(1.0F), onValueChange = {})\n"
     }
 
     @Test
@@ -71,9 +63,7 @@ class EditTextGeneratorTest {
         val file = composeGenerator.generate()
 
         file.assertThatAnyFunctionEquals(
-            """
-            |TextField(value = "", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})
-            """.trimMargin().trimIndent()
+            "TextField(value = \"\", modifier = Modifier.wrapContentWidth().fillMaxHeight(), onValueChange = {})\n"
         )
     }
 

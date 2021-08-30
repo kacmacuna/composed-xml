@@ -39,13 +39,14 @@ class FrameLayoutNode(
             ChainedMemberName(
                 prefix = info.width.prefix(),
                 info.width.argument(),
-                containsArguments = true
+                containsArguments = info.width.containsArguments()
             ),
             ChainedMemberName(
                 prefix = info.height.prefix(),
                 info.height.argument(),
-                containsArguments = true
-            )
+                containsArguments = info.height.containsArguments()
+            ),
+            *info.chainedMemberNames.toTypedArray()
         ).codeBlock()
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
 
