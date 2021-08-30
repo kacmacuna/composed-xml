@@ -5,16 +5,18 @@ import generators.nodes.attributes.constraints.ConstraintDetails
 import generators.nodes.attributes.constraints.ConstraintDirection
 import generators.nodes.attributes.constraints.Constraints
 import org.w3c.dom.Element
+import readers.imports.Imports
 
 class ButtonElement(
-    layoutElement: Element
+    layoutElement: Element,
+    private val imports: Imports
 ) : LayoutElement<ButtonNode>(layoutElement) {
 
-    private val textViewElement = TextViewElement(layoutElement)
+    private val textViewElement = TextViewElement(layoutElement, imports)
 
     override fun node(): ButtonNode {
         return ButtonNode(
-            info = getInfo()
+            info = getInfo(), imports
         )
     }
 

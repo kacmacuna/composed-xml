@@ -3,10 +3,12 @@ package readers.elements
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
+import readers.imports.Imports
 import readers.tags.ViewTags
 
 class ViewGroupIterator(
-    private val layoutElement: LayoutElement<ViewNode>
+    private val layoutElement: LayoutElement<ViewNode>,
+    private val imports: Imports
 ) : Iterator<ViewNode> {
     override fun hasNext(): Boolean {
         return currentIndex < totalNodeList.size
@@ -26,7 +28,7 @@ class ViewGroupIterator(
         val element = totalNodeList[currentIndex]
         currentIndex++
 
-        return ViewTags.fromString(element.nodeName).toLayoutElement(element).node()
+        return ViewTags.fromString(element.nodeName).toLayoutElement(element, imports).node()
     }
 
     private fun writeInList(nodeList: NodeList) {

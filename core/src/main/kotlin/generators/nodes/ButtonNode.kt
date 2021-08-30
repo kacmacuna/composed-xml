@@ -7,12 +7,14 @@ import generators.nodes.attributes.layout.LayoutWidth
 import poet.addCodeBlockIf
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
+import readers.imports.Imports
 
 class ButtonNode(
-    private val info: Info
+    private val info: Info,
+    private val imports: Imports
 ) : ViewNode {
 
-    private val textViewNode = TextViewNode(info.textInfo)
+    private val textViewNode = TextViewNode(info.textInfo, imports)
 
 
     override val children: Iterable<ViewNode>
@@ -28,13 +30,13 @@ class ButtonNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = GenerationEngine.get().className("androidx.compose.material", "Button")
+        val instance = imports.viewImports.button
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("onClick = {}"))
 
         val modifierCodeBlock = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            prefix = imports.attributeImports.modifier,
             ChainedMemberName(
                 prefix = info.width.prefix(),
                 info.width.argument(),

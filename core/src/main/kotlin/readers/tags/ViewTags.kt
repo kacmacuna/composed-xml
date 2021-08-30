@@ -3,6 +3,7 @@ package readers.tags
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import readers.elements.*
+import readers.imports.Imports
 
 enum class ViewTags(val value: String) {
     TEXT_VIEW("TextView"),
@@ -10,18 +11,19 @@ enum class ViewTags(val value: String) {
     BUTTON("Button"),
     FRAME_LAYOUT("FrameLayout"),
     CONSTRAINT_LAYOUT("androidx.constraintlayout.widget.ConstraintLayout"),
-    EDIT_TEXT("EditText"),;
+    EDIT_TEXT("EditText"), ;
 
     fun toLayoutElement(
         element: Element,
+        imports: Imports
     ): LayoutElement<ViewNode> {
         return when (this) {
-            TEXT_VIEW -> TextViewElement(element)
-            LINEAR_LAYOUT -> LinearLayoutElement(element)
-            BUTTON -> ButtonElement(element)
-            FRAME_LAYOUT -> FrameLayoutElement(element)
-            EDIT_TEXT -> EditTextElement(element)
-            CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element)
+            TEXT_VIEW -> TextViewElement(element, imports)
+            LINEAR_LAYOUT -> LinearLayoutElement(element, imports)
+            BUTTON -> ButtonElement(element, imports)
+            FRAME_LAYOUT -> FrameLayoutElement(element, imports)
+            EDIT_TEXT -> EditTextElement(element, imports)
+            CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element, imports)
         }
     }
 

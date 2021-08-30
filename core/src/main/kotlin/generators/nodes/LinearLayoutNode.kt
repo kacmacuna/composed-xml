@@ -7,9 +7,11 @@ import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
+import readers.imports.Imports
 
 class LinearLayoutNode(
     private val info: Info,
+    private val imports: Imports,
     override val children: Iterable<ViewNode>,
 ) : ViewNode {
     override val id: String
@@ -25,18 +27,16 @@ class LinearLayoutNode(
 
 
     override fun body(): CodeBlock {
-        val instance = GenerationEngine.get().className(
-            "androidx.compose.foundation.layout.", when (info.orientation) {
-                Orientation.Horizontal -> "Row"
-                Orientation.Vertical -> "Column"
-            }
-        )
+        val instance = when (info.orientation) {
+            Orientation.Horizontal -> imports.viewImports.row
+            Orientation.Vertical -> imports.viewImports.column
+        }
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            prefix = imports.attributeImports.modifier,
             ChainedMemberName(
-                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                prefix = imports.attributeImports.background,
                 info.backgroundColor.argument()
             ),
             ChainedMemberName(

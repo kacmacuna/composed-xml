@@ -3,14 +3,17 @@ package readers.elements
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
+import readers.imports.Imports
 
 class TextViewElement(
-    layoutElement: Element
+    layoutElement: Element,
+    private val imports: Imports
 ) : LayoutElement<TextViewNode>(layoutElement) {
 
     override fun node(): TextViewNode {
         return TextViewNode(
-            getInfo()
+            getInfo(),
+            imports
         )
     }
 

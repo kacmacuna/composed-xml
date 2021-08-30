@@ -3,9 +3,11 @@ package readers.elements
 import generators.nodes.LinearLayoutNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
+import readers.imports.Imports
 
 class LinearLayoutElement(
-    private val layoutElement: Element
+    private val layoutElement: Element,
+    private val imports: Imports
 ) : LayoutElement<LinearLayoutNode>(layoutElement) {
 
 
@@ -20,7 +22,8 @@ class LinearLayoutElement(
                 height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
                 weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat()
             ),
-            children = children()
+            children = children(),
+            imports = imports
         )
     }
 
@@ -52,7 +55,7 @@ class LinearLayoutElement(
         return object : Iterable<ViewNode> {
 
             override fun iterator(): Iterator<ViewNode> {
-                return ViewGroupIterator(this@LinearLayoutElement)
+                return ViewGroupIterator(this@LinearLayoutElement, imports)
             }
         }
     }

@@ -76,31 +76,6 @@ class TextViewComposeGeneratorTest {
     }
 
     @Test
-    fun `given text color defines textColor and textSize generated function should import sp and colorResource`() {
-        val composeGenerator = xmlReader.read(
-            content = """ 
-            <TextView
-                android:id="@+id/title"
-                android:text="Hello"
-                android:textColor="@color/blue"
-                android:textSize="20sp" /> """.trimIndent(),
-            fileName = "test"
-        )
-
-        val file = composeGenerator.generate()
-
-        val importsAsStrings = file.toBuilder().imports.map { it.toString() }
-
-        assertThat(
-            importsAsStrings, CoreMatchers.hasItems(
-                "androidx.compose.ui.res.colorResource",
-                "androidx.compose.ui.unit.sp"
-            )
-        )
-
-    }
-
-    @Test
     fun `given TextView defines textColor HardCoded way generated function should have HardCoded color value`() {
         val composeGenerator = xmlReader.read(
             content = """ 

@@ -7,9 +7,11 @@ import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
+import readers.imports.Imports
 
 class EditTextNode(
-    private val info: Info
+    private val info: Info,
+    private val imports: Imports
 ) : ViewNode {
 
     override val children: Iterable<ViewNode>
@@ -25,15 +27,15 @@ class EditTextNode(
     }
 
     override fun body(): CodeBlock {
-        val instance = GenerationEngine.get().className("androidx.compose.material", "TextField")
+        val instance = imports.viewImports.textField
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("value = \"\""))
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            prefix = imports.attributeImports.modifier,
             ChainedMemberName(
-                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                prefix = imports.attributeImports.background,
                 info.backgroundColor.argument()
             ),
             ChainedMemberName(

@@ -1,6 +1,5 @@
 package generators.nodes.attributes.layout
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 
@@ -9,7 +8,10 @@ class LayoutSizeMatchParent private constructor(
 ) : LayoutSize {
 
     override fun prefix(): MemberName {
-        return GenerationEngine.get().memberName("androidx.compose.foundation.layout", statement)
+        return if (statement == "fillMaxWidth")
+            ServiceLocator.get().imports.attributeImports.fillMaxWidth
+        else
+            ServiceLocator.get().imports.attributeImports.fillMaxHeight
     }
 
     override fun argument(): CodeBlock {

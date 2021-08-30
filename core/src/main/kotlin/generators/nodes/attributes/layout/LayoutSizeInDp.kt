@@ -1,6 +1,5 @@
 package generators.nodes.attributes.layout
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 
@@ -10,14 +9,18 @@ class LayoutSizeInDp private constructor(
 ) : LayoutSize {
 
     override fun prefix(): MemberName {
-        return GenerationEngine.get().memberName("androidx.compose.foundation.layout", prefix)
+        val attributeImports = ServiceLocator.get().imports.attributeImports
+        return if (prefix == "width")
+            attributeImports.layoutWidth
+        else
+            attributeImports.layoutHeight
     }
 
     override fun argument(): CodeBlock {
         return CodeBlock.builder()
             .add(
                 "$size.%M",
-                GenerationEngine.get().memberName("androidx.compose.ui.unit", "dp"),
+                    ServiceLocator.get().imports.attributeImports.dp
             ).build()
     }
 

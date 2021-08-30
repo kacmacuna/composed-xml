@@ -1,15 +1,19 @@
 package generators.nodes
 
+import ServiceLocator
 import com.squareup.kotlinpoet.*
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
+import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
+import readers.imports.Imports
 
 class TextViewNode(
-    private val info: Info
+    private val info: Info,
+    private val imports: Imports
 ) : ViewNode {
 
 
@@ -19,21 +23,21 @@ class TextViewNode(
 
     override fun function(): FunSpec {
         return FunSpec.builder(info.id)
-            .addAnnotation(composeAnnotation())
+            .addComposeAnnotation()
             .addCode(body())
             .build()
     }
 
     override fun body(): CodeBlock {
-        val instance = GenerationEngine.get().className("androidx.compose.material", "Text")
+        val instance = imports.viewImports.text
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of(""""${info.text}""""))
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = GenerationEngine.get().className("androidx.compose.ui", "Modifier"),
+            prefix = imports.attributeImports.modifier,
             ChainedMemberName(
-                prefix = GenerationEngine.get().memberName("androidx.compose.foundation", "background"),
+                prefix = imports.attributeImports.background,
                 info.backgroundColor.argument()
             ),
             ChainedMemberName(
@@ -58,7 +62,7 @@ class TextViewNode(
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)
         if (info.textColor.isEmpty().not()) {
-            paramCodeBlocks.add(CodeBlock.of("color = ${info.textColor.statement()}"))
+            paramCodeBlocks.add(CodeBlock.of("color = %L", info.textColor.argument()))
         }
         if (info.fontSize > 0) {
             paramCodeBlocks.add(CodeBlock.of("fontSize = ${info.fontSize}.sp"))
@@ -68,10 +72,6 @@ class TextViewNode(
             .add("\n")
             .build()
     }
-
-    private fun composeAnnotation() = AnnotationSpec.builder(
-        ClassName("androidx.compose.runtime", "Composable")
-    ).build()
 
     override fun imports(): Iterable<ClassName> {
         return listOf(

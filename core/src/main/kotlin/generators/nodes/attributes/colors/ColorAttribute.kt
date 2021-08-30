@@ -6,7 +6,6 @@ import com.squareup.kotlinpoet.MemberName
 
 interface ColorAttribute {
 
-    fun statement(): String
     fun argument(): CodeBlock
     fun imports(): Iterable<ClassName>
 
