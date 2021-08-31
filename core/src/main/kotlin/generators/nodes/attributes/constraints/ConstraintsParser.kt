@@ -7,14 +7,18 @@ import java.util.*
 
 class ConstraintsParser {
 
-    fun parse(element: LayoutElement<ViewNode>): Constraints {
+    fun parse(element: Element): Constraints {
         return Constraints(
-            constraintId = element.getViewIdNameTag().replaceFirstChar { it.lowercase() },
+            constraintId = getViewIdNameTag(element),
             details = parseAsConstraints(element)
         )
     }
 
-    private fun parseAsConstraints(element: LayoutElement<ViewNode>): List<ConstraintDetails> {
+    private fun getViewIdNameTag(element: Element): String {
+        return element.getAttribute("android:id").removePrefix("@+id/")
+    }
+
+    private fun parseAsConstraints(element: Element): List<ConstraintDetails> {
         return ConstraintType.values().filter {
             element.hasAttribute(it.attributeTag)
         }.map {
@@ -25,9 +29,30 @@ class ConstraintsParser {
                     Constraints.PARENT
                 else
                     "${attributeValue.removePrefix("@id/")}Ref",
-                constraintToDirection = it.toDirection
+                constraintToDirection = it.toDirection,
+                margin = getMarginFromDirection(it, element)
             )
         }
+    }
+
+    private fun getMarginFromDirection(
+        it: ConstraintType,
+        element: Element
+    ): Int {
+        val attribute = when (it.thisDirection) {
+            ConstraintDirection.Top -> element.getAttribute("android:layout_marginTop")
+            ConstraintDirection.Bottom -> element.getAttribute("android:layout_marginBottom")
+            ConstraintDirection.Start -> element.getAttribute("android:layout_marginStart")
+            ConstraintDirection.End -> element.getAttribute("android:layout_marginEnd")
+        }.ifEmpty { null } ?: when (it.thisDirection) {
+            ConstraintDirection.Top,
+            ConstraintDirection.Bottom -> element.getAttribute("android:layout_marginVertical")
+            ConstraintDirection.Start,
+            ConstraintDirection.End -> element.getAttribute("android:layout_marginHorizontal")
+        }.ifEmpty { null } ?: element.getAttribute("android:layout_margin")
+        return if (attribute.isNotEmpty())
+            attribute.removeSuffix("dp").toInt()
+        else -1
     }
 
     private enum class ConstraintType(

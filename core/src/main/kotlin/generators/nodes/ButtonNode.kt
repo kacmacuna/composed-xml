@@ -48,10 +48,7 @@ class ButtonNode(
                 info.height.argument(),
                 containsArguments = info.height.containsArguments()
             ),
-            ChainedMemberName(
-                info.constraints.memberNamePrefix,
-                info.constraints.codeBlock()
-            )
+            *info.chainedMemberNames.toTypedArray()
         ).codeBlock()
         if (modifierCodeBlock.isNotEmpty()) paramCodeBlocks.add(modifierCodeBlock)
 
@@ -93,7 +90,6 @@ class ButtonNode(
 
     data class Info(
         val textInfo: TextViewNode.Info,
-        val constraints: Constraints,
         override val height: LayoutHeight,
         override val width: LayoutWidth,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),

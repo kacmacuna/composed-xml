@@ -3,11 +3,13 @@ package readers.elements
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
+import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class TextViewElement(
     layoutElement: Element,
-    private val imports: Imports
+    private val imports: Imports,
+    private val chainedMemberNames: List<ChainedMemberName>
 ) : LayoutElement<TextViewNode>(layoutElement) {
 
     override fun node(): TextViewNode {
@@ -26,7 +28,7 @@ class TextViewElement(
         height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
         backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),
         weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat(),
-        constraints = constraintsParser.parse(this)
+        chainedMemberNames = chainedMemberNames
     )
 
     private fun getFontSize(): Int {

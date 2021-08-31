@@ -1,8 +1,9 @@
 package readers.elements
 
 import generators.nodes.ConstraintLayoutNode
-import generators.nodes.FrameLayoutNode
 import org.w3c.dom.Element
+import readers.elements.viewgroup.ConstraintLayoutIterator
+import readers.elements.viewgroup.ViewGroupIterator
 import readers.imports.Imports
 
 class ConstraintLayoutElement(
@@ -11,7 +12,7 @@ class ConstraintLayoutElement(
 ) : LayoutElement<ConstraintLayoutNode>(element) {
     override fun node(): ConstraintLayoutNode {
         return ConstraintLayoutNode(
-            children = Iterable { ViewGroupIterator(this, imports) },
+            children = Iterable { ConstraintLayoutIterator(this, imports) },
             info = ConstraintLayoutNode.Info(
                 id = getViewIdNameTag(),
                 backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),

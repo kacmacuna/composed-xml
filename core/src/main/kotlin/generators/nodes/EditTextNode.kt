@@ -53,6 +53,7 @@ class EditTextNode(
                 info.height.argument(),
                 containsArguments = info.height.containsArguments()
             ),
+            *info.chainedMemberNames.toTypedArray()
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)

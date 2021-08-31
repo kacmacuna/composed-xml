@@ -5,8 +5,12 @@
   * android:layout_width
   * android:layout_height
   * android:background
+  * android:layout_margin(variations inside of children)
 * LinearLayout
   * android:id
+  * android:layout_width
+  * android:layout_height
+  * app:layout_constraint*
   * android:orientation
   * android:gravity
   * android:background
@@ -15,6 +19,9 @@
   * android:weight
 * FrameLayout
   * android:id
+  * android:layout_width
+  * android:layout_height
+  * app:layout_constraint*
   * android:orientation
   * android:gravity
   * android:background
@@ -48,6 +55,7 @@
   * android:id
   * android:layout_width
   * android:layout_height
+  * app:layout_constraint*
   * android:weight
   * android:background
 * ScrollView

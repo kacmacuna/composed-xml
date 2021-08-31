@@ -1,6 +1,7 @@
 package generators.nodes.attributes.constraints
 
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.joinToCode
 import readers.imports.Imports
 
 class Constraints(
@@ -24,8 +25,19 @@ class Constraints(
     private fun detailsToUI(): CodeBlock {
         val codeBlock = CodeBlock.builder()
         details.forEach {
-            val code = "${it.constraintDirection.value}.linkTo(${it.constraintToId}.${it.constraintToDirection.value})"
-            codeBlock.addStatement(code)
+            val code = "${it.constraintDirection.value}.linkTo(%L)"
+            val attributes = mutableListOf(
+                CodeBlock.of("${it.constraintToId}.${it.constraintToDirection.value}"),
+            )
+            if (it.margin > 0) {
+                attributes.add(
+                    CodeBlock.of("${it.margin}.%M", ServiceLocator.get().imports.attributeImports.dp)
+                )
+            }
+            codeBlock.addStatement(
+                code,
+                attributes.joinToCode()
+            )
         }
         return codeBlock.build()
     }

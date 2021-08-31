@@ -138,4 +138,75 @@ class ConstraintLayoutGeneratorTest {
             """.trimIndent().trimMargin()
         )
     }
+
+    @Test
+    fun `given text is start_start parent with marginStart 20,dp, function should be text start linkTo parent start 20,dp`() {
+        val composeGenerator = xmlReader.read(
+            content =
+            """
+                <androidx.constraintlayout.widget.ConstraintLayout 
+                    android:id="@+id/content">
+                    
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                                    
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+
+
+        file.assertThatAnyFunctionEquals(
+            """
+            |ConstraintLayout () {
+            |  val textRef = ConstrainedLayoutReference(Any())
+            |  Text("", modifier = Modifier.constrainAs(textRef, {
+            |    start.linkTo(parent.start, 20.dp)
+            |  }
+            |  ))
+            |}
+            |
+            """.trimIndent().trimMargin()
+        )
+    }
+
+    @Test
+    fun `given text is start_start parent with marginHorizontal 20,dp, function should be text start linkTo parent start 20,dp`() {
+        val composeGenerator = xmlReader.read(
+            content =
+            """
+                <androidx.constraintlayout.widget.ConstraintLayout 
+                    android:id="@+id/content">
+                    
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_marginHorizontal="20dp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                                    
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            """.trimIndent(),
+            fileName = "test"
+        )
+
+        val file = composeGenerator.generate()
+
+
+        file.assertThatAnyFunctionEquals(
+            """
+            |ConstraintLayout () {
+            |  val textRef = ConstrainedLayoutReference(Any())
+            |  Text("", modifier = Modifier.constrainAs(textRef, {
+            |    start.linkTo(parent.start, 20.dp)
+            |  }
+            |  ))
+            |}
+            |
+            """.trimIndent().trimMargin()
+        )
+    }
+
 }

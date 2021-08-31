@@ -14,7 +14,6 @@ abstract class LayoutElement<out T : ViewNode>(
 
     protected val colorAttributeParser = ColorAttributeParser()
     protected val layoutSizeAttributeParser = LayoutSizeAttributeParser()
-    protected val constraintsParser = ConstraintsParser()
 
     fun getViewIdNameTag(): String {
         return originalElement.getAttribute("android:id").removePrefix("@+id/")

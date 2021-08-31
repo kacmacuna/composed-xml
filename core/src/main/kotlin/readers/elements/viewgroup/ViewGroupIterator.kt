@@ -1,12 +1,13 @@
-package readers.elements
+package readers.elements.viewgroup
 
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
+import readers.elements.LayoutElement
 import readers.imports.Imports
 import readers.tags.ViewTags
 
-class ViewGroupIterator(
+open class ViewGroupIterator(
     private val layoutElement: LayoutElement<ViewNode>,
     private val imports: Imports
 ) : Iterator<ViewNode> {
@@ -14,9 +15,9 @@ class ViewGroupIterator(
         return currentIndex < totalNodeList.size
     }
 
-    private var currentIndex = 0
+    protected var currentIndex = 0
 
-    private val totalNodeList: MutableList<Element> = mutableListOf()
+    protected val totalNodeList: MutableList<Element> = mutableListOf()
 
     init {
         ViewTags.values().map {

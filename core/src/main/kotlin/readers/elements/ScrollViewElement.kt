@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
 import poet.chained.ChainedMemberName
+import readers.elements.viewgroup.ViewGroupIterator
 import readers.imports.Imports
 
 class ScrollViewElement(

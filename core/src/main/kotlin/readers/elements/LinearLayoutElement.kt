@@ -3,11 +3,14 @@ package readers.elements
 import generators.nodes.LinearLayoutNode
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
+import poet.chained.ChainedMemberName
+import readers.elements.viewgroup.ViewGroupIterator
 import readers.imports.Imports
 
 class LinearLayoutElement(
     private val layoutElement: Element,
-    private val imports: Imports
+    private val imports: Imports,
+    private val chainedMemberNames: List<ChainedMemberName>
 ) : LayoutElement<LinearLayoutNode>(layoutElement) {
 
 
@@ -20,6 +23,7 @@ class LinearLayoutElement(
                 backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),
                 width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
                 height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
+                chainedMemberNames = chainedMemberNames
             ),
             children = children(),
             imports = imports

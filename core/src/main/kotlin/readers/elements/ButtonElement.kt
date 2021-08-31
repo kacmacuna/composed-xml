@@ -1,19 +1,19 @@
 package readers.elements
 
 import generators.nodes.ButtonNode
-import generators.nodes.attributes.constraints.ConstraintDetails
-import generators.nodes.attributes.constraints.ConstraintDirection
 import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import org.w3c.dom.Element
+import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class ButtonElement(
     layoutElement: Element,
-    private val imports: Imports
+    private val imports: Imports,
+    private val chainedMemberNames: List<ChainedMemberName>
 ) : LayoutElement<ButtonNode>(layoutElement) {
 
-    private val textViewElement = TextViewElement(layoutElement, imports)
+    private val textViewElement = TextViewElement(layoutElement, imports, chainedMemberNames)
 
     override fun node(): ButtonNode {
         return ButtonNode(
@@ -23,15 +23,15 @@ class ButtonElement(
 
     private fun getInfo(): ButtonNode.Info {
         val textViewInfo = textViewElement.getInfo().copy(
-            constraints = Constraints.EMPTY,
             width = EmptyLayoutSize,
-            height = EmptyLayoutSize
+            height = EmptyLayoutSize,
+            chainedMemberNames = emptyList()
         )
         return ButtonNode.Info(
             textInfo = textViewInfo,
             width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
             height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
-            constraints = constraintsParser.parse(this)
+            chainedMemberNames = chainedMemberNames
         )
     }
 

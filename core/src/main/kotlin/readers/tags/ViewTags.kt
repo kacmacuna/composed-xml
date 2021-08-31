@@ -2,6 +2,7 @@ package readers.tags
 
 import generators.nodes.ViewNode
 import org.w3c.dom.Element
+import poet.chained.ChainedMemberName
 import readers.elements.*
 import readers.imports.Imports
 
@@ -17,14 +18,15 @@ enum class ViewTags(val value: String) {
 
     fun toLayoutElement(
         element: Element,
-        imports: Imports
+        imports: Imports,
+        chainedMemberNames: List<ChainedMemberName> = listOf()
     ): LayoutElement<ViewNode> {
         return when (this) {
-            TEXT_VIEW -> TextViewElement(element, imports)
-            LINEAR_LAYOUT -> LinearLayoutElement(element, imports)
-            BUTTON -> ButtonElement(element, imports)
-            FRAME_LAYOUT -> FrameLayoutElement(element, imports)
-            EDIT_TEXT -> EditTextElement(element, imports)
+            TEXT_VIEW -> TextViewElement(element, imports, chainedMemberNames)
+            LINEAR_LAYOUT -> LinearLayoutElement(element, imports, chainedMemberNames)
+            BUTTON -> ButtonElement(element, imports, chainedMemberNames)
+            FRAME_LAYOUT -> FrameLayoutElement(element, imports, chainedMemberNames)
+            EDIT_TEXT -> EditTextElement(element, imports, chainedMemberNames)
             CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element, imports)
             SCROLL_VIEW, HORIZONTAL_SCROLL_VIEW -> ScrollViewElement(element, imports, this == HORIZONTAL_SCROLL_VIEW)
         }

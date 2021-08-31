@@ -53,10 +53,7 @@ class TextViewNode(
                 info.height.argument(),
                 containsArguments = info.height.containsArguments()
             ),
-            ChainedMemberName(
-                info.constraints.memberNamePrefix,
-                info.constraints.codeBlock()
-            )
+            *info.chainedMemberNames.toTypedArray()
         ).codeBlock()
         if (modifiers.isNotEmpty())
             paramCodeBlocks.add(modifiers)
@@ -100,7 +97,6 @@ class TextViewNode(
         val fontSize: Int,
         val backgroundColor: ColorAttribute,
         val weight: Float,
-        val constraints: Constraints
     ) : ViewInfo
 
 }
