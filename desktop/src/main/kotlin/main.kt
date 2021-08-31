@@ -1,35 +1,20 @@
 @file:Suppress("FunctionName")
 
-import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import editor.xmlCode
+import editor.EditorBody
+import editor.EditorHeader
 import readers.XmlReaderImpl
-import theme.AppTheme
+import samples.SampleItem
+import samples.SamplesListView
 
 fun main() = application {
     val xmlReader = XmlReaderImpl()
@@ -38,60 +23,31 @@ fun main() = application {
         title = "Xml To Composable",
         state = rememberWindowState(width = 1200.dp, height = 800.dp)
     ) {
+        val mainBody = remember { mutableStateOf(MainBody(BottomNavigationViewItem.Editor)) }
         MaterialTheme {
-            Column {
-                EditorHeader()
-                SelectionContainer {
-                    EditorBody(xmlReader)
+            Column(modifier = Modifier.fillMaxSize()) {
+                when (mainBody.value.bottomNavigationViewItem) {
+                    BottomNavigationViewItem.Samples -> {
+                        SamplesListView(
+                            modifier = Modifier.weight(1F),
+                            SampleItem.DATA,
+                            mainBody
+                        )
+                    }
+                    BottomNavigationViewItem.Editor -> {
+                        Column(modifier = Modifier.weight(1F)) {
+                            EditorHeader()
+                            SelectionContainer { EditorBody(xmlReader, mainBody.value.initialXmlBody) }
+                        }
+                    }
                 }
+                BottomNavigationView(mainBody)
             }
         }
     }
 }
 
-@Composable
-private fun EditorHeader() {
-    Row(modifier = Modifier.fillMaxWidth(), Arrangement.spacedBy(5.dp)) {
-        Text("Xml Editor", modifier = Modifier.weight(1F), style = MaterialTheme.typography.h5)
-        Text("Composable Review", modifier = Modifier.weight(1F), style = MaterialTheme.typography.h5)
-    }
-}
-
-@Composable
-private fun EditorBody(xmlReader: XmlReaderImpl) {
-    Row(Modifier.wrapContentWidth().fillMaxHeight(), Arrangement.spacedBy(5.dp)) {
-        val xmlValue = remember { mutableStateOf(TextFieldValue("")) }
-        val composableValue = remember { mutableStateOf("") }
-        XmlEditor(xmlValue, xmlReader, composableValue)
-        Spacer(Modifier.width(1.dp).fillMaxHeight())
-        Text(
-            text = codeString(composableValue.value),
-            modifier = Modifier.weight(1F).background(AppTheme.colors.backgroundDark).fillMaxHeight(),
-        )
-    }
-}
-
-@Composable
-private fun RowScope.XmlEditor(
-    xmlValue: MutableState<TextFieldValue>,
-    xmlReader: XmlReaderImpl,
-    composableValue: MutableState<String>
-) {
-
-    TextField(
-        value = xmlValue.value,
-        modifier = Modifier.weight(1F).background(AppTheme.xmlCode.background).fillMaxHeight(),
-        textStyle = MaterialTheme.typography.body1,
-        onValueChange = {
-            xmlValue.value = TextFieldValue(xmlCode(it.text), it.selection, it.composition)
-            val generator = xmlReader.read(it.text, "temp")
-            val stringBuilder = StringBuilder()
-            generator.generate().writeTo(stringBuilder)
-            composableValue.value = if (xmlValue.value.text.isEmpty()) ""
-            else if (stringBuilder.toString().isNotEmpty())
-                stringBuilder.toString().replace("\t", "   ")
-            else
-                composableValue.value.replace("\t", "   ")
-        },
-    )
-}
+data class MainBody(
+    val bottomNavigationViewItem: BottomNavigationViewItem,
+    val initialXmlBody: String = ""
+)
