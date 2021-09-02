@@ -2,6 +2,7 @@ package readers.elements
 
 import generators.nodes.TextViewNode
 import generators.nodes.ViewNode
+import generators.nodes.attributes.TextAttribute
 import org.w3c.dom.Element
 import poet.chained.ChainedMemberName
 import readers.imports.Imports
@@ -21,7 +22,7 @@ class TextViewElement(
 
     fun getInfo() = TextViewNode.Info(
         id = getViewIdNameTag(),
-        text = getText(),
+        text = TextAttribute(getAttribute("android:text")),
         textColor = colorAttributeParser.parse(getAttribute("android:textColor")),
         fontSize = getFontSize(),
         width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
@@ -33,10 +34,6 @@ class TextViewElement(
 
     private fun getFontSize(): Int {
         return getAttribute("android:textSize").ifEmpty { return 0 }.removeSuffix("sp").toInt()
-    }
-
-    private fun getText(): String {
-        return getAttribute("android:text")
     }
 
 }

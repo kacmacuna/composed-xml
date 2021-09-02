@@ -1,6 +1,7 @@
 package generators.nodes
 
 import com.squareup.kotlinpoet.*
+import generators.nodes.attributes.TextAttribute
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
@@ -18,10 +19,10 @@ class EditTextNode(
     override val children: Iterable<ViewNode>
         get() = emptyList()
     override val id: String
-        get() = info.id
+        get() = info.id.getIdOrDefault()
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addComposeAnnotation()
             .addCode(body())
             .build()
@@ -30,7 +31,7 @@ class EditTextNode(
     override fun body(): CodeBlock {
         val instance = imports.viewImports.textField
         val paramCodeBlocks = mutableListOf<CodeBlock>()
-        paramCodeBlocks.add(CodeBlock.of("value = \"\""))
+        paramCodeBlocks.add(CodeBlock.of("value = %L", info.text.statement()))
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
@@ -84,9 +85,10 @@ class EditTextNode(
     }
 
     data class Info(
-        override val id: String,
+        override val id: ViewId,
         val backgroundColor: ColorAttribute,
         val weight: Float,
+        val text: TextAttribute,
         override val width: LayoutWidth,
         override val height: LayoutHeight,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),

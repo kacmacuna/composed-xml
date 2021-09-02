@@ -1,6 +1,8 @@
 package generators.nodes.attributes.constraints
 
 import generators.nodes.ViewNode
+import generators.nodes.attributes.ViewIdAsVariable
+import generators.nodes.attributes.size.DPAttribute
 import org.w3c.dom.Element
 import readers.elements.LayoutElement
 import java.util.*
@@ -15,7 +17,12 @@ class ConstraintsParser {
     }
 
     private fun getViewIdNameTag(element: Element): String {
-        return element.getAttribute("android:id").removePrefix("@+id/")
+        val idName = element.getAttribute("android:id").removePrefix("@+id/")
+        return if (idName.isNotEmpty()) {
+            ViewIdAsVariable("${idName}Ref").toString()
+        } else {
+            "ConstrainedLayoutReference(Any())"
+        }
     }
 
     private fun parseAsConstraints(element: Element): List<ConstraintDetails> {
@@ -28,9 +35,9 @@ class ConstraintsParser {
                 constraintToId = if (attributeValue == "parent")
                     Constraints.PARENT
                 else
-                    "${attributeValue.removePrefix("@id/")}Ref",
+                    "${ViewIdAsVariable(attributeValue.removePrefix("@id/"))}Ref",
                 constraintToDirection = it.toDirection,
-                margin = getMarginFromDirection(it, element)
+                margin = DPAttribute(getMarginFromDirection(it, element))
             )
         }
     }
@@ -38,7 +45,7 @@ class ConstraintsParser {
     private fun getMarginFromDirection(
         it: ConstraintType,
         element: Element
-    ): Int {
+    ): String {
         val attribute = when (it.thisDirection) {
             ConstraintDirection.Top -> element.getAttribute("android:layout_marginTop")
             ConstraintDirection.Bottom -> element.getAttribute("android:layout_marginBottom")
@@ -50,9 +57,7 @@ class ConstraintsParser {
             ConstraintDirection.Start,
             ConstraintDirection.End -> element.getAttribute("android:layout_marginHorizontal")
         }.ifEmpty { null } ?: element.getAttribute("android:layout_margin")
-        return if (attribute.isNotEmpty())
-            attribute.removeSuffix("dp").toInt()
-        else -1
+        return attribute
     }
 
     private enum class ConstraintType(

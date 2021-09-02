@@ -1,7 +1,8 @@
+package constraint
+
 import assertions.assertThatAnyFunctionEquals
 import data.XmlReaderTest
 import org.junit.jupiter.api.Test
-import readers.XmlReaderImpl
 
 class ConstraintLayoutGeneratorTest {
 

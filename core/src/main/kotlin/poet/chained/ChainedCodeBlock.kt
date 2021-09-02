@@ -24,7 +24,7 @@ class ChainedCodeBlock(
             val chainedBuilder = CodeBlock.builder()
 
             if (it.containsArguments) {
-                chainedBuilder.add("%M(${it.argument})", it.prefix)
+                chainedBuilder.add("%M(%L)", it.prefix, it.argument)
             } else {
                 chainedBuilder.add("%M()", it.prefix)
 

@@ -21,10 +21,10 @@ class ButtonNode(
     override val children: Iterable<ViewNode>
         get() = emptyList()
     override val id: String
-        get() = info.textInfo.id
+        get() = info.id.getIdOrDefault()
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.textInfo.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addAnnotation(composeAnnotation())
             .addCode(body())
             .build()
@@ -94,7 +94,7 @@ class ButtonNode(
         override val width: LayoutWidth,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),
     ) : ViewInfo {
-        override val id: String
+        override val id: ViewId
             get() = textInfo.id
     }
 }

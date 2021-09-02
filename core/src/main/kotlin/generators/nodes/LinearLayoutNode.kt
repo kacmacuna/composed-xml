@@ -16,11 +16,11 @@ class LinearLayoutNode(
     override val children: Iterable<ViewNode>,
 ) : ViewNode {
     override val id: String
-        get() = info.id
+        get() = info.id.getIdOrDefault()
 
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addComposeAnnotation()
             .addCode(body())
             .build()
@@ -99,7 +99,7 @@ class LinearLayoutNode(
     }
 
     data class Info(
-        override val id: String,
+        override val id: ViewId,
         val orientation: Orientation,
         val arrangement: Arrangement,
         val backgroundColor: ColorAttribute,

@@ -92,7 +92,7 @@ class ScrollViewTest {
         generator.generate() assertThatAnyFunctionEquals """
             |Box (modifier = Modifier.fillMaxWidth().height(200.dp).horizontalScroll(rememberScrollState())) {
             |  Text("", modifier = Modifier.fillMaxWidth().height(150.dp))
-            |  TextField(value = "", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
+            |  TextField(value = "Hello", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
             |}
             |
         """.trimIndent().trimMargin()
@@ -131,7 +131,7 @@ class ScrollViewTest {
         generator.generate() assertThatAnyFunctionEquals """
             |Row (modifier = Modifier.fillMaxWidth().height(200.dp).horizontalScroll(rememberScrollState())) {
             |  Text("", modifier = Modifier.fillMaxWidth().height(150.dp))
-            |  TextField(value = "", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
+            |  TextField(value = "Hello", modifier = Modifier.fillMaxWidth().height(150.dp), onValueChange = {})
             |}
             |
         """.trimIndent().trimMargin()

@@ -8,6 +8,8 @@ interface AttributeImports {
     val wrapContentHeight: MemberName
     val wrapContentWidth: MemberName
     val dp: MemberName
+    val dimenResource: MemberName
+    val stringResource: MemberName
     val layoutHeight: MemberName
     val layoutWidth: MemberName
     val graphics: ClassName
@@ -29,6 +31,10 @@ interface AttributeImports {
             get() = Imports.memberName(includePackageName, "androidx.compose.foundation.layout", "wrapContentWidth")
         override val dp: MemberName
             get() = Imports.memberName(includePackageName, "androidx.compose.ui.unit", "dp")
+        override val dimenResource: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.ui.res", "dimensionResource")
+        override val stringResource: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.ui.res", "stringResource")
         override val layoutHeight: MemberName
             get() = Imports.memberName(includePackageName, "androidx.compose.foundation.layout", "height")
         override val layoutWidth: MemberName

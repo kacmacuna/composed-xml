@@ -5,6 +5,7 @@ import generators.ComposeGeneratorImpl
 import generators.EmptyComposeGenerator
 import org.xml.sax.InputSource
 import org.xml.sax.SAXParseException
+import readers.generator.NumGenerator
 import readers.imports.Imports
 import readers.tags.ViewTags
 import java.io.StringReader
@@ -19,7 +20,8 @@ class XmlReaderImpl(
 
     init {
         ServiceLocator.createInstance(
-            imports = imports
+            imports = imports,
+            numGenerator = NumGenerator.Impl(0..10)
         )
     }
 

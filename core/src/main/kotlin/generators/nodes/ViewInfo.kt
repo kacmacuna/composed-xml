@@ -5,7 +5,7 @@ import generators.nodes.attributes.layout.LayoutWidth
 import poet.chained.ChainedMemberName
 
 interface ViewInfo {
-    val id: String
+    val id: ViewId
     val width: LayoutWidth
     val height: LayoutHeight
     val chainedMemberNames: List<ChainedMemberName>

@@ -16,11 +16,11 @@ class FrameLayoutNode(
     private val imports: Imports
 ) : ViewNode {
     override val id: String
-        get() = info.id
+        get() = info.id.getIdOrDefault()
 
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addAnnotation(composeAnnotation())
             .addCode(body())
             .build()
@@ -99,7 +99,7 @@ class FrameLayoutNode(
     }
 
     data class Info(
-        override val id: String,
+        override val id: ViewId,
         val alignment: Alignment,
         val backgroundColor: ColorAttribute,
         override val width: LayoutWidth,

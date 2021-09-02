@@ -2,6 +2,9 @@ package editor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -31,10 +34,19 @@ fun EditorBody(xmlReader: XmlReaderImpl, initialXmlBody: String) {
         val composableValue = remember { mutableStateOf("") }
         XmlEditor(xmlValue, xmlReader, composableValue)
         Spacer(Modifier.width(1.dp).fillMaxHeight())
-        Text(
-            text = codeString(composableValue.value),
-            modifier = Modifier.weight(1F).background(AppTheme.colors.backgroundDark).fillMaxHeight(),
-        )
+        Box(modifier = Modifier.weight(1F).background(AppTheme.colors.backgroundDark).fillMaxHeight().fillMaxWidth()){
+            SelectionContainer(
+                Modifier.verticalScroll(
+                    rememberScrollState()
+                )
+            ) {
+                Text(
+                    text = codeString(composableValue.value),
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                )
+            }
+        }
+
     }
 }
 

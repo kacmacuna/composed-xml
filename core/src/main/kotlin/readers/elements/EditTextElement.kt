@@ -2,6 +2,7 @@ package readers.elements
 
 import generators.nodes.EditTextNode
 import generators.nodes.ViewNode
+import generators.nodes.attributes.TextAttribute
 import org.w3c.dom.Element
 import poet.chained.ChainedMemberName
 import readers.imports.Imports
@@ -20,7 +21,8 @@ class EditTextElement(
                 weight = getAttribute("android:weight").ifEmpty { "-1" }.toFloat(),
                 width = layoutSizeAttributeParser.parseW(getAttribute("android:layout_width")),
                 height = layoutSizeAttributeParser.parseH(getAttribute("android:layout_height")),
-                chainedMemberNames = chainedMemberNames
+                chainedMemberNames = chainedMemberNames,
+                text = TextAttribute(getAttribute("android:text"))
             ),
             imports
         )

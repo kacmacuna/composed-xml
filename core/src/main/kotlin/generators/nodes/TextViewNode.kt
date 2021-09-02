@@ -1,8 +1,8 @@
 package generators.nodes
 
 import com.squareup.kotlinpoet.*
+import generators.nodes.attributes.TextAttribute
 import generators.nodes.attributes.colors.ColorAttribute
-import generators.nodes.attributes.constraints.Constraints
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
@@ -18,10 +18,10 @@ class TextViewNode(
 
     override val children: Iterable<ViewNode> = emptyList()
     override val id: String
-        get() = info.id
+        get() = info.id.getIdOrDefault()
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addComposeAnnotation()
             .addCode(body())
             .build()
@@ -30,7 +30,7 @@ class TextViewNode(
     override fun body(): CodeBlock {
         val instance = imports.viewImports.text
         val paramCodeBlocks = mutableListOf<CodeBlock>()
-        paramCodeBlocks.add(CodeBlock.of(""""${info.text}""""))
+        paramCodeBlocks.add(info.text.statement())
 
         val modifiers = ChainedCodeBlock(
             prefixNamedParam = "modifier",
@@ -88,11 +88,11 @@ class TextViewNode(
 
 
     data class Info(
-        override val id: String,
+        override val id: ViewId,
         override val width: LayoutWidth,
         override val height: LayoutHeight,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),
-        val text: String,
+        val text: TextAttribute,
         val textColor: ColorAttribute,
         val fontSize: Int,
         val backgroundColor: ColorAttribute,

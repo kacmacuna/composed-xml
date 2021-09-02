@@ -1,5 +1,6 @@
 package readers.elements
 
+import generators.nodes.ViewId
 import generators.nodes.ViewNode
 import generators.nodes.attributes.Alignment
 import generators.nodes.attributes.colors.ColorAttributeParser
@@ -15,13 +16,13 @@ abstract class LayoutElement<out T : ViewNode>(
     protected val colorAttributeParser = ColorAttributeParser()
     protected val layoutSizeAttributeParser = LayoutSizeAttributeParser()
 
-    fun getViewIdNameTag(): String {
-        return originalElement.getAttribute("android:id").removePrefix("@+id/")
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    fun getViewIdNameTag(): ViewId {
+        return ViewId(originalElement.getAttribute("android:id").removePrefix("@+id/")
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
     }
 
     protected fun getAlignmentFromGravity(): Alignment {
-        return when(getAttribute("android:gravity")){
+        return when (getAttribute("android:gravity")) {
             "top|start", "start|top" -> Alignment.TopStart
             "center" -> Alignment.Center
             "bottom|center", "center|bottom" -> Alignment.BottomCenter

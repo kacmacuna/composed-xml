@@ -12,7 +12,6 @@ class ComposeGeneratorImpl(
         return FileSpec
             .builder(fileName, fileName)
             .addFunction(viewNode.function())
-//            .also { builder -> viewNode.imports().forEach { builder.addImport(it, "") } }
             .build()
     }
 }

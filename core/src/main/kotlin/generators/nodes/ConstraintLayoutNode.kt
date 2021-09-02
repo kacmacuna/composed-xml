@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.joinToCode
+import generators.nodes.attributes.ViewIdAsVariable
 import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
@@ -19,10 +20,10 @@ class ConstraintLayoutNode(
     private val imports: Imports
 ) : ViewNode {
     override val id: String
-        get() = info.id
+        get() = info.id.getIdOrDefault()
 
     override fun function(): FunSpec {
-        return FunSpec.builder(info.id)
+        return FunSpec.builder(info.id.getIdOrDefault())
             .addComposeAnnotation()
             .addCode(body())
             .build()
@@ -68,9 +69,9 @@ class ConstraintLayoutNode(
 
     private fun createConstraintRefs(): CodeBlock {
         val codeBlock = CodeBlock.builder()
-        children.forEach {
+        children.map { it.id }.filter { it != ViewId.DEFAULT }.forEach {
             codeBlock.addStatement(
-                "val ${it.id.replaceFirstChar { first -> first.lowercase() }}Ref = %M(Any())",
+                "val ${ViewIdAsVariable(it)}Ref = %M(Any())",
                 imports.viewImports.constraintLayout.constrainedLayoutReference
             )
         }
@@ -107,7 +108,7 @@ class ConstraintLayoutNode(
 
     data class Info(
         val backgroundColor: ColorAttribute,
-        override val id: String,
+        override val id: ViewId,
         override val width: LayoutWidth,
         override val height: LayoutHeight,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),

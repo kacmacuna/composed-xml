@@ -23,7 +23,7 @@ class ConstraintLayoutIterator(
             listOf(
                 ChainedMemberName(
                     constraints.memberNamePrefix,
-                    constraints.codeBlock()
+                    constraints.argument()
                 )
             )
         ).node()
