@@ -21,7 +21,6 @@ class XmlReaderImpl(
     init {
         ServiceLocator.createInstance(
             imports = imports,
-            numGenerator = NumGenerator.Impl(0..10)
         )
     }
 

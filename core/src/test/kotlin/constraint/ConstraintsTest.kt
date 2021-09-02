@@ -37,7 +37,7 @@ class ConstraintsTest {
 
         Assertions.assertEquals(
             """
-                textView1Ref, {
+                ConstrainedLayoutReference(Any()), {
                   top.linkTo(parent.top, 10.dp)
                 }
                 

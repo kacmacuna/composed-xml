@@ -4,10 +4,5 @@ import readers.generator.NumGenerator
 import readers.imports.Imports
 
 fun createFakeServiceLocator() {
-    ServiceLocator.createInstance(Imports.Impl(false), object : NumGenerator {
-        override fun generate(): Int {
-            return 1
-        }
-
-    })
+    ServiceLocator.createInstance(Imports.Impl(false))
 }
