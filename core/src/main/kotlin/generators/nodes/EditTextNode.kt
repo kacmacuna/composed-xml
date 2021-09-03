@@ -21,12 +21,6 @@ class EditTextNode(
     override val id: String
         get() = info.id.getIdOrDefault()
 
-    override fun function(): FunSpec {
-        return FunSpec.builder(info.id.getIdOrDefault())
-            .addComposeAnnotation()
-            .addCode(body())
-            .build()
-    }
 
     override fun body(): CodeBlock {
         val instance = imports.viewImports.textField
@@ -63,10 +57,6 @@ class EditTextNode(
             .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
             .add("\n")
             .build()
-    }
-
-    override fun imports(): Iterable<ClassName> {
-        return emptyList()
     }
 
     override fun copyWithInfo(

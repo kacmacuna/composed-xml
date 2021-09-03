@@ -47,10 +47,15 @@
   * android:text
   * android:textColor
   * android:textSize
-  * android:layout_width
-  * android:layout_height
   * android:background
   * android:weight
+* ImageView
+  * android:id
+  * android:layout_width
+  * android:layout_height
+  * app:layout_constraint*
+  * android:background
+  * android:src
 * EditText
   * android:id
   * android:layout_width

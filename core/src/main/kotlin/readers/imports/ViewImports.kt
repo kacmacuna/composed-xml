@@ -7,6 +7,7 @@ interface ViewImports {
     val constraintLayout: ConstraintLayoutImports
     val button: ClassName
     val textField: ClassName
+    val image: ClassName
     val box: ClassName
     val column: ClassName
     val row: ClassName
@@ -21,6 +22,8 @@ interface ViewImports {
             get() = Imports.className(includePackageName, "androidx.compose.material", "Button")
         override val textField: ClassName
             get() = Imports.className(includePackageName, "androidx.compose.material", "TextField")
+        override val image: ClassName
+            get() = Imports.className(includePackageName, "androidx.compose.foundation", "Image")
         override val box: ClassName
             get() = Imports.className(includePackageName, "androidx.compose.foundation.layout", "Box")
         override val column: ClassName
@@ -38,12 +41,12 @@ interface ViewImports {
         val constrainAs: MemberName
             get() = Imports.memberName(includePackageName, "", "constrainAs")
         val root: ClassName
-            get() = Imports.className(includePackageName, "androidx.compose.foundation.layout", "ConstraintLayout")
+            get() = Imports.className(includePackageName, "androidx.constraintlayout.compose", "ConstraintLayout")
 
         val constrainedLayoutReference: MemberName
             get() = Imports.memberName(
                 includePackageName,
-                "androidx.compose.foundation.layout",
+                "androidx.constraintlayout.compose",
                 "ConstrainedLayoutReference"
             )
     }

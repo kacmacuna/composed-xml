@@ -20,13 +20,6 @@ class TextViewNode(
     override val id: String
         get() = info.id.getIdOrDefault()
 
-    override fun function(): FunSpec {
-        return FunSpec.builder(info.id.getIdOrDefault())
-            .addComposeAnnotation()
-            .addCode(body())
-            .build()
-    }
-
     override fun body(): CodeBlock {
         val instance = imports.viewImports.text
         val paramCodeBlocks = mutableListOf<CodeBlock>()
@@ -67,12 +60,6 @@ class TextViewNode(
             .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
             .add("\n")
             .build()
-    }
-
-    override fun imports(): Iterable<ClassName> {
-        return listOf(
-            ClassName("androidx.compose.ui.unit", "sp")
-        ) + info.textColor.imports()
     }
 
     override fun copyWithInfo(

@@ -22,12 +22,6 @@ class ConstraintLayoutNode(
     override val id: String
         get() = info.id.getIdOrDefault()
 
-    override fun function(): FunSpec {
-        return FunSpec.builder(info.id.getIdOrDefault())
-            .addComposeAnnotation()
-            .addCode(body())
-            .build()
-    }
 
     override fun body(): CodeBlock {
         val instance = imports.viewImports.constraintLayout.root
@@ -76,10 +70,6 @@ class ConstraintLayoutNode(
             )
         }
         return codeBlock.build()
-    }
-
-    override fun imports(): Iterable<ClassName> {
-        return children.map { it.imports() }.flatten()
     }
 
     override fun copyWithInfo(

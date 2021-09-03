@@ -12,9 +12,7 @@ interface ViewNode {
     val children: Iterable<ViewNode>
     val id: String
 
-    fun function(): FunSpec
     fun body(): CodeBlock
-    fun imports(): Iterable<ClassName>
     fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
         layoutWidth: LayoutWidth = EmptyLayoutSize,

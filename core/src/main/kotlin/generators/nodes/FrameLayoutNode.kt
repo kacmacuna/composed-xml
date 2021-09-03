@@ -6,6 +6,7 @@ import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
+import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
 import readers.imports.Imports
@@ -18,13 +19,6 @@ class FrameLayoutNode(
     override val id: String
         get() = info.id.getIdOrDefault()
 
-
-    override fun function(): FunSpec {
-        return FunSpec.builder(info.id.getIdOrDefault())
-            .addAnnotation(composeAnnotation())
-            .addCode(body())
-            .build()
-    }
 
     override fun body(): CodeBlock {
         val instance = imports.viewImports.box
@@ -66,10 +60,6 @@ class FrameLayoutNode(
             .build()
     }
 
-    override fun imports(): Iterable<ClassName> {
-        return listOf(ClassName("androidx.compose.foundation.layout", "Box")) + children.map { it.imports() }.flatten()
-    }
-
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
         layoutWidth: LayoutWidth,
@@ -85,10 +75,6 @@ class FrameLayoutNode(
             children = children
         )
     }
-
-    private fun composeAnnotation() = AnnotationSpec.builder(
-        ClassName("androidx.compose.runtime", "Composable")
-    ).build()
 
     private fun childrenToCodeBlock(): CodeBlock {
         val codeBlock = CodeBlock.builder()

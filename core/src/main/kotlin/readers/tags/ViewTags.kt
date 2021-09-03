@@ -5,6 +5,7 @@ import org.w3c.dom.Element
 import poet.chained.ChainedMemberName
 import readers.elements.*
 import readers.imports.Imports
+import javax.swing.text.html.ImageView
 
 enum class ViewTags(val value: String) {
     TEXT_VIEW("TextView"),
@@ -14,7 +15,8 @@ enum class ViewTags(val value: String) {
     CONSTRAINT_LAYOUT("androidx.constraintlayout.widget.ConstraintLayout"),
     EDIT_TEXT("EditText"),
     SCROLL_VIEW("ScrollView"),
-    HORIZONTAL_SCROLL_VIEW("HorizontalScrollView");
+    HORIZONTAL_SCROLL_VIEW("HorizontalScrollView"),
+    IMAGE_VIEW("ImageView");
 
     fun toLayoutElement(
         element: Element,
@@ -29,6 +31,7 @@ enum class ViewTags(val value: String) {
             EDIT_TEXT -> EditTextElement(element, imports, chainedMemberNames)
             CONSTRAINT_LAYOUT -> ConstraintLayoutElement(element, imports)
             SCROLL_VIEW, HORIZONTAL_SCROLL_VIEW -> ScrollViewElement(element, imports, this == HORIZONTAL_SCROLL_VIEW)
+            IMAGE_VIEW -> ImageViewElement(element, imports, chainedMemberNames)
         }
     }
 

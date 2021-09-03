@@ -23,12 +23,6 @@ class ButtonNode(
     override val id: String
         get() = info.id.getIdOrDefault()
 
-    override fun function(): FunSpec {
-        return FunSpec.builder(info.id.getIdOrDefault())
-            .addAnnotation(composeAnnotation())
-            .addCode(body())
-            .build()
-    }
 
     override fun body(): CodeBlock {
         val instance = imports.viewImports.button
@@ -63,14 +57,6 @@ class ButtonNode(
     private fun composeAnnotation() = AnnotationSpec.builder(
         ClassName("androidx.compose.runtime", "Composable")
     ).build()
-
-    override fun imports(): Iterable<ClassName> {
-        return listOf(
-            ClassName("androidx.compose.material", "Button"),
-            ClassName("androidx.compose.ui.unit", "sp"),
-            ClassName("androidx.compose.material", "Text"),
-        ) + info.textInfo.textColor.imports()
-    }
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,

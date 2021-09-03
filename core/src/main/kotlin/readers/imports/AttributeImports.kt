@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.MemberName
 
 interface AttributeImports {
 
+    val painterResource: MemberName
     val wrapContentHeight: MemberName
     val wrapContentWidth: MemberName
     val dp: MemberName
@@ -25,6 +26,8 @@ interface AttributeImports {
     class Impl(
         private val includePackageName: Boolean
     ) : AttributeImports {
+        override val painterResource: MemberName
+            get() = Imports.memberName(includePackageName, "androidx.compose.ui.res", "painterResource")
         override val wrapContentHeight: MemberName
             get() = Imports.memberName(includePackageName, "androidx.compose.foundation.layout", "wrapContentHeight")
         override val wrapContentWidth: MemberName
