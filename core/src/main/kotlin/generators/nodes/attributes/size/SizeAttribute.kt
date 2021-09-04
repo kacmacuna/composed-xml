@@ -12,10 +12,18 @@ class DPAttribute(
     }
 
     fun statement(): CodeBlock {
-        return if (attributeValue.contains("@dimen"))
+        return if (isResource())
             resourceArgument()
         else
             hardCodedArgument()
+    }
+
+    fun isResource(): Boolean {
+        return attributeValue.contains("@dimen")
+    }
+
+    fun resourceValue(): String {
+        return attributeValue.removePrefix("@dimen/")
     }
 
     private fun hardCodedArgument(): CodeBlock {

@@ -37,7 +37,7 @@ class ConstraintsParser {
                 else
                     "${ViewIdAsVariable(attributeValue.removePrefix("@id/"))}Ref",
                 constraintToDirection = it.toDirection,
-                margin = DPAttribute(getMarginFromDirection(it, element))
+                margin = ConstraintLayoutMargin(DPAttribute(getMarginFromDirection(it, element)))
             )
         }
     }

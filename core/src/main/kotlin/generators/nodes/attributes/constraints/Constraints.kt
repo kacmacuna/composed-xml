@@ -5,7 +5,7 @@ import com.squareup.kotlinpoet.joinToCode
 
 class Constraints(
     private val constraintId: String,
-    private val details: Collection<ConstraintDetails>
+    val details: Collection<ConstraintDetails>
 ) {
 
     val memberNamePrefix = ServiceLocator.get().imports.viewImports.constraintLayout.constrainAs
@@ -28,7 +28,7 @@ class Constraints(
             val attributes = mutableListOf(
                 CodeBlock.of("${it.constraintToId}.${it.constraintToDirection.value}"),
             )
-            if (it.margin.isValid()) {
+            if (it.margin.dpAttribute.isValid()) {
                 attributes.add(it.margin.statement())
             }
             codeBlock.addStatement(

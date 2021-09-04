@@ -6,5 +6,5 @@ data class ConstraintDetails(
     val constraintDirection: ConstraintDirection,
     val constraintToId: String,
     val constraintToDirection: ConstraintDirection,
-    val margin: DPAttribute
+    val margin: ConstraintLayoutMargin
 )

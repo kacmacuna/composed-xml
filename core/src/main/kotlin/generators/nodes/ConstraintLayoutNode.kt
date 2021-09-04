@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.joinToCode
 import generators.nodes.attributes.ViewIdAsVariable
 import generators.nodes.attributes.colors.ColorAttribute
+import generators.nodes.attributes.constraints.ConstraintLayoutMargin
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
@@ -49,7 +50,7 @@ class ConstraintLayoutNode(
         if (modifiers.isNotEmpty()) paramCodeBlocks.add(modifiers)
 
         return CodeBlock.builder()
-            .add("%T (%L)", instance, paramCodeBlocks.joinToCode())
+            .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
             .add(
                 CodeBlock.builder()
                     .beginControlFlow(" {")
@@ -68,6 +69,10 @@ class ConstraintLayoutNode(
                 "val ${ViewIdAsVariable(it)}Ref = %M(Any())",
                 imports.viewImports.constraintLayout.constrainedLayoutReference
             )
+        }
+        info.margins.map { it.localVariable() }.filter { it.isNotEmpty() }.toSet().forEach {
+            codeBlock.add(it)
+            codeBlock.add("\n")
         }
         return codeBlock.build()
     }
@@ -102,6 +107,7 @@ class ConstraintLayoutNode(
         override val width: LayoutWidth,
         override val height: LayoutHeight,
         override val chainedMemberNames: List<ChainedMemberName> = listOf(),
+        val margins: Iterable<ConstraintLayoutMargin>
     ) : ViewInfo
 
 }
