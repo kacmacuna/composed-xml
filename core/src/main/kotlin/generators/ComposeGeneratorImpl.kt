@@ -12,13 +12,13 @@ class ComposeGeneratorImpl(
 ) : ComposeGenerator {
     override fun generate(): FileSpec {
         return FileSpec
-            .builder(fileName, fileName)
+            .builder("", fileName)
             .addFunction(func())
             .build()
     }
 
     private fun func(): FunSpec {
-        return FunSpec.builder(viewNode.id)
+        return FunSpec.builder(viewNode.info.id.getIdOrDefault())
             .addComposeAnnotation()
             .addCode(viewNode.body())
             .build()

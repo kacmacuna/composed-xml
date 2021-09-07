@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.rules.TemporaryFolder
 import plugin.TranslatorTranslatorIdeaEvent
 
+@Disabled
 class WritingInFolderTest {
 
     @Rule

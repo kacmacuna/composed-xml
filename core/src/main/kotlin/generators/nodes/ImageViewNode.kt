@@ -11,13 +11,11 @@ import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class ImageViewNode(
-    private val info: Info,
+    override val info: Info,
     private val imports: Imports
 ) : ViewNode {
     override val children: Iterable<ViewNode>
         get() = emptyList()
-    override val id: String
-        get() = info.id.getIdOrDefault()
 
 
     override fun body(): CodeBlock {
@@ -55,14 +53,14 @@ class ImageViewNode(
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
-        layoutWidth: LayoutWidth,
-        layoutHeight: LayoutHeight
+        layoutWidth: LayoutWidth?,
+        layoutHeight: LayoutHeight?
     ): ViewNode {
         return ImageViewNode(
             info = info.copy(
                 chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
-                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
-                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+                width = layoutWidth ?: info.width,
+                height = layoutHeight ?: info.height
             ),
             imports = imports,
         )

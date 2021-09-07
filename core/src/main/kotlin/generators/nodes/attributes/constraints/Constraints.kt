@@ -5,7 +5,9 @@ import com.squareup.kotlinpoet.joinToCode
 
 class Constraints(
     private val constraintId: String,
-    val details: Collection<ConstraintDetails>
+    val details: Collection<ConstraintDetails>,
+    val isWidthFillToConstraints: Boolean,
+    val isHeightFillToConstraints: Boolean,
 ) {
 
     val memberNamePrefix = ServiceLocator.get().imports.viewImports.constraintLayout.constrainAs
@@ -36,12 +38,21 @@ class Constraints(
                 attributes.joinToCode()
             )
         }
+        if (isWidthFillToConstraints) {
+            codeBlock.addStatement(
+                "width = %T.fillToConstraints", ServiceLocator.get().imports.attributeImports.dimension
+            )
+        }
+        if (isHeightFillToConstraints) {
+            codeBlock.addStatement(
+                "height = %T.fillToConstraints", ServiceLocator.get().imports.attributeImports.dimension
+            )
+        }
         return codeBlock.build()
     }
 
     companion object {
         const val PARENT = "parent"
-        val EMPTY = Constraints("", emptyList())
     }
 
 }

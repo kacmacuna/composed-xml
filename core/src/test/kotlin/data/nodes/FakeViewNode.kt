@@ -1,37 +1,31 @@
-package generators.nodes
+package data.nodes
 
-import com.squareup.kotlinpoet.*
-import generators.nodes.attributes.constraints.Constraints
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.joinToCode
+import generators.nodes.ViewId
+import generators.nodes.ViewInfo
+import generators.nodes.ViewNode
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
 import generators.nodes.attributes.layout.LayoutWidth
-import poet.addCodeBlockIf
 import poet.chained.ChainedCodeBlock
 import poet.chained.ChainedMemberName
-import readers.imports.Imports
 
-class ButtonNode(
-    override val info: Info,
-    private val imports: Imports
+class FakeViewNode(
+    override val info: FakeInfo
 ) : ViewNode {
-
-    private val textViewNode = TextViewNode(info.textInfo, imports)
-
-
     override val children: Iterable<ViewNode>
         get() = emptyList()
-    val id: String
-        get() = info.id.getIdOrDefault()
-
 
     override fun body(): CodeBlock {
-        val instance = imports.viewImports.button
+        val instance = ClassName("", "FakeView")
         val paramCodeBlocks = mutableListOf<CodeBlock>()
         paramCodeBlocks.add(CodeBlock.of("onClick = {}"))
 
         val modifierCodeBlock = ChainedCodeBlock(
             prefixNamedParam = "modifier",
-            prefix = imports.attributeImports.modifier,
+            prefix = ClassName("", "Modifier"),
             ChainedMemberName(
                 prefix = info.width.prefix(),
                 info.width.argument(),
@@ -48,39 +42,32 @@ class ButtonNode(
 
         return CodeBlock.builder()
             .add("%T(%L)", instance, paramCodeBlocks.joinToCode())
-            .beginControlFlow(" {")
-            .addCodeBlockIf(info.textInfo.text.isNotEmpty()) { textViewNode.body() }
-            .endControlFlow()
+            .add("\n")
             .build()
     }
-
-    private fun composeAnnotation() = AnnotationSpec.builder(
-        ClassName("androidx.compose.runtime", "Composable")
-    ).build()
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
         layoutWidth: LayoutWidth?,
         layoutHeight: LayoutHeight?
     ): ViewNode {
-        return ButtonNode(
+        return FakeViewNode(
             info = info.copy(
                 chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
                 width = layoutWidth ?: info.width,
                 height = layoutHeight ?: info.height
             ),
-            imports = imports
         )
     }
 
-
-    data class Info(
-        val textInfo: TextViewNode.Info,
-        override val height: LayoutHeight,
-        override val width: LayoutWidth,
-        override val chainedMemberNames: List<ChainedMemberName> = listOf(),
+    data class FakeInfo(
+        override val width: LayoutWidth = EmptyLayoutSize,
+        override val height: LayoutHeight = EmptyLayoutSize,
+        override val chainedMemberNames: List<ChainedMemberName> = emptyList()
     ) : ViewInfo {
         override val id: ViewId
-            get() = textInfo.id
+            get() = ViewId("fake_id")
+
     }
+
 }

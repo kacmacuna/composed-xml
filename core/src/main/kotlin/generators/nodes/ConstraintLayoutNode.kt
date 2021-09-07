@@ -9,6 +9,7 @@ import generators.nodes.attributes.colors.ColorAttribute
 import generators.nodes.attributes.constraints.ConstraintLayoutMargin
 import generators.nodes.attributes.layout.EmptyLayoutSize
 import generators.nodes.attributes.layout.LayoutHeight
+import generators.nodes.attributes.layout.LayoutSizeInDp
 import generators.nodes.attributes.layout.LayoutWidth
 import poet.addComposeAnnotation
 import poet.chained.ChainedCodeBlock
@@ -16,12 +17,24 @@ import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class ConstraintLayoutNode(
-    override val children: Iterable<ViewNode>,
-    private val info: Info,
+    private val _children: Iterable<ViewNode>,
+    override val info: Info,
     private val imports: Imports
 ) : ViewNode {
-    override val id: String
-        get() = info.id.getIdOrDefault()
+
+    override val children: Iterable<ViewNode>
+        get() = _children.map {
+            val width = it.info.width
+            val height = it.info.height
+
+            val isWidth0Dp = width is LayoutSizeInDp && width.size == 0
+            val isHeight0Dp = height is LayoutSizeInDp && height.size == 0
+
+            it.copyWithInfo(
+                layoutWidth = if (isWidth0Dp) EmptyLayoutSize else width,
+                layoutHeight = if (isHeight0Dp) EmptyLayoutSize else height
+            )
+        }
 
 
     override fun body(): CodeBlock {
@@ -64,7 +77,7 @@ class ConstraintLayoutNode(
 
     private fun createConstraintRefs(): CodeBlock {
         val codeBlock = CodeBlock.builder()
-        children.map { it.id }.filter { it != ViewId.DEFAULT }.forEach {
+        children.map { it.info.id.getIdOrDefault() }.filter { it != ViewId.DEFAULT }.forEach {
             codeBlock.addStatement(
                 "val ${ViewIdAsVariable(it)}Ref = %M(Any())",
                 imports.viewImports.constraintLayout.constrainedLayoutReference
@@ -79,15 +92,15 @@ class ConstraintLayoutNode(
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
-        layoutWidth: LayoutWidth,
-        layoutHeight: LayoutHeight
+        layoutWidth: LayoutWidth?,
+        layoutHeight: LayoutHeight?
     ): ViewNode {
         return ConstraintLayoutNode(
-            children = children,
+            _children = children,
             info = info.copy(
                 chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
-                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
-                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+                width = layoutWidth ?: info.width,
+                height = layoutHeight ?: info.height
             ),
             imports = imports
         )

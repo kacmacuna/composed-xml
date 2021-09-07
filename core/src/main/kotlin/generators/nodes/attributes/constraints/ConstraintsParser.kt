@@ -12,7 +12,9 @@ class ConstraintsParser {
     fun parse(element: Element): Constraints {
         return Constraints(
             constraintId = getViewIdNameTag(element),
-            details = parseAsConstraints(element)
+            details = parseAsConstraints(element),
+            isWidthFillToConstraints = element.getAttribute("android:layout_width") == "0dp",
+            isHeightFillToConstraints = element.getAttribute("android:layout_height") == "0dp",
         )
     }
 

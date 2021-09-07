@@ -13,7 +13,7 @@ class ConstraintLayoutElement(
     override fun node(): ConstraintLayoutNode {
         val constraintLayoutChildrenMargins = ConstraintLayoutChildrenMargins(this)
         return ConstraintLayoutNode(
-            children = Iterable { ConstraintLayoutIterator(this, imports) },
+            _children = Iterable { ConstraintLayoutIterator(this, imports) },
             info = ConstraintLayoutNode.Info(
                 id = getViewIdNameTag(),
                 backgroundColor = colorAttributeParser.parse(getAttribute("android:background")),

@@ -4,7 +4,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 
 class LayoutSizeInDp private constructor(
-    private val size: Int,
+    val size: Int,
     private val prefix: String
 ) : LayoutSize {
 

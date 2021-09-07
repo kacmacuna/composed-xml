@@ -39,7 +39,7 @@ class ScrollViewTest {
         )
 
         generator.generate() assertThatAnyFunctionEquals """
-            |ConstraintLayout (modifier = Modifier.fillMaxWidth().height(200.dp).verticalScroll(rememberScrollState())) {
+            |ConstraintLayout(modifier = Modifier.fillMaxWidth().height(200.dp).verticalScroll(rememberScrollState())) {
             |  val btn1Ref = ConstrainedLayoutReference(Any())
             |  val btn2Ref = ConstrainedLayoutReference(Any())
             |  Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(150.dp).constrainAs(btn1Ref, {

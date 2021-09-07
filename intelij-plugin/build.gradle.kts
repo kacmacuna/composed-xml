@@ -26,10 +26,12 @@ intellij {
     version.set("2021.2")
 }
 tasks {
+    instrumentCode {
+        compilerVersion.set("211.7628.21")
+    }
     patchPluginXml {
-        changeNotes.set("""
-            Add change notes here.<br>
-            <em>most HTML tags may be used</em>        """.trimIndent())
+        sinceBuild.set("193")
+        untilBuild.set("220.*")
     }
 }
 tasks.getByName<Test>("test") {

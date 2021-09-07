@@ -11,12 +11,10 @@ import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class LinearLayoutNode(
-    private val info: Info,
+    override val info: Info,
     private val imports: Imports,
     override val children: Iterable<ViewNode>,
 ) : ViewNode {
-    override val id: String
-        get() = info.id.getIdOrDefault()
 
 
     override fun body(): CodeBlock {
@@ -71,14 +69,14 @@ class LinearLayoutNode(
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
-        layoutWidth: LayoutWidth,
-        layoutHeight: LayoutHeight
+        layoutWidth: LayoutWidth?,
+        layoutHeight: LayoutHeight?
     ): ViewNode {
         return LinearLayoutNode(
             info = info.copy(
                 chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
-                width = if (layoutWidth != EmptyLayoutSize) layoutWidth else info.width,
-                height = if (layoutHeight != EmptyLayoutSize) layoutHeight else info.height
+                width = layoutWidth ?: info.width,
+                height = layoutHeight ?: info.height
             ),
             imports = imports,
             children = children

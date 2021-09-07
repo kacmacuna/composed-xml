@@ -10,12 +10,12 @@ import poet.chained.ChainedMemberName
 
 interface ViewNode {
     val children: Iterable<ViewNode>
-    val id: String
+    val info: ViewInfo
 
     fun body(): CodeBlock
     fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
-        layoutWidth: LayoutWidth = EmptyLayoutSize,
-        layoutHeight: LayoutHeight = EmptyLayoutSize
+        layoutWidth: LayoutWidth? = null,
+        layoutHeight: LayoutHeight? = null
     ): ViewNode
 }

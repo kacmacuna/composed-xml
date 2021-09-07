@@ -11,14 +11,12 @@ import poet.chained.ChainedMemberName
 import readers.imports.Imports
 
 class TextViewNode(
-    private val info: Info,
+    override val info: Info,
     private val imports: Imports
 ) : ViewNode {
 
 
     override val children: Iterable<ViewNode> = emptyList()
-    override val id: String
-        get() = info.id.getIdOrDefault()
 
     override fun body(): CodeBlock {
         val instance = imports.viewImports.text
@@ -64,12 +62,16 @@ class TextViewNode(
 
     override fun copyWithInfo(
         vararg chainedMemberNames: ChainedMemberName,
-        layoutWidth: LayoutWidth,
-        layoutHeight: LayoutHeight
+        layoutWidth: LayoutWidth?,
+        layoutHeight: LayoutHeight?
     ): ViewNode {
         return TextViewNode(
-            info = info.copy(chainedMemberNames = info.chainedMemberNames + chainedMemberNames),
-            imports = imports
+            info = info.copy(
+                chainedMemberNames = info.chainedMemberNames + chainedMemberNames,
+                width = layoutWidth ?: info.width,
+                height = layoutHeight ?: info.height
+            ),
+            imports = imports,
         )
     }
 
